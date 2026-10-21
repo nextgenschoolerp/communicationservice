@@ -1,0 +1,1473 @@
+{
+  "info": {
+    "_postman_id": "90000009-comm-4000-8000-000000000001",
+    "name": "School ERP - CommunicationService (Module 09)",
+    "description": "Module 09 Stakeholder Communication, WhatsApp/SMS Gateway & Parent App (communicationservice, port 8090, context path /communicationservice, API base /api/v1/communication). Covers stories US-09000 to US-09019. Run in order after loading module09_communication_seed.sql.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8090/communicationservice",
+      "type": "string"
+    },
+    {
+      "key": "authUrl",
+      "value": "http://localhost:8082/authservice",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "Password@123",
+      "type": "string"
+    },
+    {
+      "key": "tenantId",
+      "value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+      "type": "string"
+    },
+    {
+      "key": "proToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "principalToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "parentToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "teacherToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "receptionistToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "securityToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sysToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "broadcastId",
+      "value": "5eed0009-0001-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "deliveryId",
+      "value": "5eed0009-0002-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "alertId",
+      "value": "5eed0009-0003-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "studentId",
+      "value": "5eed0003-0001-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "parentUserId",
+      "value": "5eed0009-0010-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "teacherUserId",
+      "value": "5eed0007-0001-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "threadId",
+      "value": "5eed0009-0004-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "passId",
+      "value": "5eed0009-0005-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "qrCode",
+      "value": "GP-SEED-DEMO-0001",
+      "type": "string"
+    },
+    {
+      "key": "appointmentId",
+      "value": "5eed0009-0006-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "slotId",
+      "value": "5eed0009-0007-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "eventId",
+      "value": "5eed0009-0008-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "ticketId",
+      "value": "5eed0009-0009-4000-8000-000000000001",
+      "type": "string"
+    },
+    {
+      "key": "surveyId",
+      "value": "5eed0009-0012-4000-8000-000000000001",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 - Sign in (authservice)",
+      "item": [
+        {
+          "name": "Sign in as pro_ananya (Public Relations Officer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"proToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"pro_ananya\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Sign in as principal_sunita (Principal)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"principalToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"principal_sunita\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Sign in as parent_rajesh (Parent)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"parentToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"parent_rajesh\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Sign in as teacher_kavya (Teacher)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"teacherToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"teacher_kavya\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Sign in as receptionist_meena (Receptionist)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"receptionistToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"receptionist_meena\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Sign in as guard_ramsingh (Security Guard)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"securityToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"guard_ramsingh\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        },
+        {
+          "name": "Sign in as admin (System Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"sysToken\", pm.response.json().data.accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"admin\", \"password\": \"{{password}}\"}"
+            },
+            "url": "{{authUrl}}/api/v1/auth/login"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09000 - Broadcast Official Circulars",
+      "item": [
+        {
+          "name": "Create Multi-Channel Broadcast",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.broadcastId) { pm.collectionVariables.set(\"broadcastId\", pm.response.json().data.broadcastId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"senderUserId\": \"{{parentUserId}}\",\n  \"senderName\": \"Ananya Sen (PRO)\",\n  \"title\": \"Annual Day Celebration 2026\",\n  \"messageBody\": \"Annual Day will be celebrated on December 15. All parents are invited.\",\n  \"targetAudience\": \"ALL_PARENTS\",\n  \"channel\": \"MULTI_CHANNEL\",\n  \"priority\": \"NORMAL\"\n}"
+            }
+          }
+        },
+        {
+          "name": "List Active Circulars",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts?tenantId={{tenantId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09001 - Automated Absence Alerts",
+      "item": [
+        {
+          "name": "Dispatch 30-Minute Absence Alert",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.alertId) { pm.collectionVariables.set(\"alertId\", pm.response.json().data.alertId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{sysToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/absence-alerts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"studentId\": \"{{studentId}}\",\n  \"studentName\": \"Aarav Sharma\",\n  \"guardianPhone\": \"+919876543210\",\n  \"guardianName\": \"Rajesh Sharma\",\n  \"absenceDate\": \"2026-10-21\",\n  \"alertChannel\": \"WHATSAPP\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Escalate Absence Alert to Counselor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{sysToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/absence-alerts/{{alertId}}/escalate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09002 - Mobile Device Token Registration",
+      "item": [
+        {
+          "name": "Register FCM Device Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/mobile/devices",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"userId\": \"{{parentUserId}}\",\n  \"deviceToken\": \"fcm-sample-token-abc-98765\",\n  \"platform\": \"ANDROID\",\n  \"appVersion\": \"2.4.1\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09003 - Multi-Child Profile Switching",
+      "item": [
+        {
+          "name": "Map Child to Parent Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/mobile/child-mappings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"parentUserId\": \"{{parentUserId}}\",\n  \"parentPhone\": \"+919876543210\",\n  \"parentName\": \"Rajesh Sharma\",\n  \"studentId\": \"{{studentId}}\",\n  \"studentName\": \"Aarav Sharma\",\n  \"grade\": \"10\",\n  \"section\": \"A\",\n  \"isPrimary\": true,\n  \"relationship\": \"FATHER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Query Linked Children For Switch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/mobile/parents/{{parentUserId}}/children"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09004 - Teacher-Parent Confidential Messaging",
+      "item": [
+        {
+          "name": "Send Message to Teacher",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/messages",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"senderId\": \"{{parentUserId}}\",\n  \"senderName\": \"Rajesh Sharma\",\n  \"senderRole\": \"ROLE_PARENT\",\n  \"recipientId\": \"{{teacherUserId}}\",\n  \"recipientName\": \"Dr. Kavya Nair\",\n  \"studentId\": \"{{studentId}}\",\n  \"threadId\": \"{{threadId}}\",\n  \"subject\": \"Syllabus doubt for upcoming assessment\",\n  \"content\": \"Could you please clarify Chapter 3 topics?\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Conversation Thread",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/messages/threads/{{threadId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09005 - Digital Student Gate Pass Generation",
+      "item": [
+        {
+          "name": "Generate Early Departure Gate Pass",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.passId) { pm.collectionVariables.set(\"passId\", pm.response.json().data.passId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/gate-passes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"studentId\": \"{{studentId}}\",\n  \"studentName\": \"Aarav Sharma\",\n  \"grade\": \"10\",\n  \"section\": \"A\",\n  \"guardianId\": \"{{parentUserId}}\",\n  \"guardianName\": \"Rajesh Sharma\",\n  \"pickupPersonName\": \"Rajesh Sharma\",\n  \"pickupPersonPhone\": \"+919876543210\",\n  \"reason\": \"Medical dental appointment\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09006 - Gate QR Scanner Departure Authorization",
+      "item": [
+        {
+          "name": "Verify QR Code and Authorize Departure",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{securityToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/gate-passes/verify",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"qrCode\": \"{{qrCode}}\",\n  \"securityGuardName\": \"Guard Ram Singh\",\n  \"gateId\": \"MAIN_GATE\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09007 - Visitor Appointments & Digital Badges",
+      "item": [
+        {
+          "name": "Register Visitor Appointment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.appointmentId) { pm.collectionVariables.set(\"appointmentId\", pm.response.json().data.appointmentId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{receptionistToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/visitors/appointments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"visitorName\": \"Suresh Mehta\",\n  \"visitorPhone\": \"+919811223344\",\n  \"visitorIdType\": \"AADHAAR\",\n  \"visitorIdNumber\": \"123443215678\",\n  \"purpose\": \"Consultation on admissions\",\n  \"hostStaffId\": \"{{teacherUserId}}\",\n  \"hostStaffName\": \"Dr. Kavya Nair\",\n  \"appointmentTime\": \"2026-10-22T10:00:00Z\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Check-in Visitor with Badge",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{receptionistToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/visitors/appointments/{{appointmentId}}/check-in",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"badgeNumber\": \"VIS-0901\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09008 - School Calendar Events & Galleries",
+      "item": [
+        {
+          "name": "Publish School Calendar Event",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.eventId) { pm.collectionVariables.set(\"eventId\", pm.response.json().data.eventId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/calendar-events",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"title\": \"Diwali Vacation 2026\",\n  \"description\": \"School remains closed for Diwali holidays.\",\n  \"eventType\": \"HOLIDAY\",\n  \"startDate\": \"2026-11-08\",\n  \"endDate\": \"2026-11-15\",\n  \"venue\": \"Campus\",\n  \"targetAudience\": \"ALL\",\n  \"isPublished\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "List Calendar Events",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/calendar-events?tenantId={{tenantId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09009 - Parent Grievance Support Tickets",
+      "item": [
+        {
+          "name": "File Grievance Support Ticket",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.ticketId) { pm.collectionVariables.set(\"ticketId\", pm.response.json().data.ticketId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/grievances",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"parentUserId\": \"{{parentUserId}}\",\n  \"parentName\": \"Rajesh Sharma\",\n  \"studentId\": \"{{studentId}}\",\n  \"studentName\": \"Aarav Sharma\",\n  \"category\": \"TRANSPORT\",\n  \"priority\": \"HIGH\",\n  \"subject\": \"Bus Route delay issue\",\n  \"description\": \"Bus 14 reached 30 min late.\",\n  \"slaDueHours\": 24\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Grievance Ticket Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{receptionistToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/grievances/{{ticketId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"RESOLVED\",\n  \"resolutionNotes\": \"Issue addressed with transport team.\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09010 - Emergency Weather Closure Nudges",
+      "item": [
+        {
+          "name": "Send Emergency Weather Broadcast",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{principalToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/emergency",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"senderUserId\": \"{{parentUserId}}\",\n  \"senderName\": \"Principal Sunita Rao\",\n  \"title\": \"URGENT: Flood Alert School Closure\",\n  \"messageBody\": \"Heavy rainfall warning in effect. School closed today.\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09011 - Delivery Tracking & Fallback",
+      "item": [
+        {
+          "name": "Update Delivery Log with SMS Fallback",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{sysToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/delivery/{{deliveryId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deliveryStatus\": \"FAILED\",\n  \"errorMessage\": \"Network timeout on WhatsApp provider\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Broadcast Delivery Logs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/{{broadcastId}}/delivery-logs"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09012 - Alert Channel Preferences",
+      "item": [
+        {
+          "name": "Update Alert Channel Preferences",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/mobile/preferences",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"userId\": \"{{parentUserId}}\",\n  \"whatsappEnabled\": true,\n  \"smsEnabled\": false,\n  \"emailEnabled\": true,\n  \"pushEnabled\": true,\n  \"quietHoursStart\": \"22:30\",\n  \"quietHoursEnd\": \"06:30\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09013 - Cafeteria Menus & Bus Schedule Bulletins",
+      "item": [
+        {
+          "name": "Publish Daily Lunch Menu Bulletin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{receptionistToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/bulletins",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"bulletinType\": \"CAFETERIA_MENU\",\n  \"title\": \"Healthy Thursday Lunch Menu\",\n  \"contentDetails\": \"Veg Pulao, Curd, Chana Masala, Gulab Jamun\",\n  \"effectiveDate\": \"2026-10-22\",\n  \"mealType\": \"LUNCH\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09014 - Parent Feedback Surveys",
+      "item": [
+        {
+          "name": "Create Feedback Survey Template",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.surveyId) { pm.collectionVariables.set(\"surveyId\", pm.response.json().data.surveyId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/surveys",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"title\": \"Sports Day Feedback Survey\",\n  \"description\": \"Rate sports day events and arrangements.\",\n  \"surveyType\": \"EVENT\",\n  \"isActive\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Submit Survey Feedback Response",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/surveys/responses",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"surveyId\": \"{{surveyId}}\",\n  \"parentUserId\": \"{{parentUserId}}\",\n  \"parentName\": \"Rajesh Sharma\",\n  \"ratingScore\": 5,\n  \"comments\": \"Wonderful management and excellent discipline.\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09015 - Instant Document Notifications",
+      "item": [
+        {
+          "name": "Send Digital Fee Receipt Notification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{sysToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/community/documents/notifications",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"documentType\": \"FEE_RECEIPT\",\n  \"documentId\": \"FEE-2026-Q1-1001\",\n  \"studentId\": \"{{studentId}}\",\n  \"parentPhone\": \"+919876543210\",\n  \"parentEmail\": \"rajesh@schoolerp.internal\",\n  \"downloadUrl\": \"https://portal.schoolerp.internal/receipts/FEE-2026-Q1-1001.pdf\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09016 - Principal Meeting Slots",
+      "item": [
+        {
+          "name": "Create Available Meeting Slot",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));",
+                  "if (pm.response.json().data && pm.response.json().data.slotId) { pm.collectionVariables.set(\"slotId\", pm.response.json().data.slotId); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{receptionistToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/visitors/slots",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"hostUserId\": \"{{teacherUserId}}\",\n  \"hostName\": \"Principal Dr. Sunita Rao\",\n  \"slotDate\": \"2026-10-25\",\n  \"startTime\": \"11:00\",\n  \"endTime\": \"11:30\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Book Meeting Slot as Parent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/visitors/slots/{{slotId}}/book",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parentId\": \"{{parentUserId}}\",\n  \"parentName\": \"Rajesh Sharma\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09017 - Perimeter Gate Audit Logs",
+      "item": [
+        {
+          "name": "Record Unauthorized Gate Attempt",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 201\", () => pm.response.to.have.status(201));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{securityToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/gate-passes/audit-logs",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenantId\": \"{{tenantId}}\",\n  \"gateId\": \"MAIN_GATE\",\n  \"gateName\": \"Front Campus Gate\",\n  \"passType\": \"VISITOR_PASS\",\n  \"personName\": \"Unregistered Visitor\",\n  \"eventType\": \"UNAUTHORIZED_ATTEMPT\",\n  \"outcome\": \"DENIED\",\n  \"notes\": \"Refused photo ID verification\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Query Gate Audit Logs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{securityToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/gate-passes/audit-logs?tenantId={{tenantId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09018 - Pinned Announcements",
+      "item": [
+        {
+          "name": "Pin Broadcast Announcement to Top",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{principalToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/{{broadcastId}}/pin",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isPinned\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Query Pinned Broadcasts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{parentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/pinned?tenantId={{tenantId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "US-09019 - Compliance Broadcast Archival",
+      "item": [
+        {
+          "name": "Archive Past Broadcast",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/{{broadcastId}}/archive",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isArchived\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Query Regulatory Archive History",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{proToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/communication/broadcasts/archived?tenantId={{tenantId}}"
+          }
+        }
+      ]
+    }
+  ]
+}

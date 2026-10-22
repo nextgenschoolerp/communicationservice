@@ -2,6 +2,7 @@ package com.kvs.communication.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -33,8 +34,17 @@ public class CalendarEventRequest {
     @NotNull(message = "End date is required")
     private LocalDate endDate;
 
+    @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d$", message = "Start time must be HH:mm")
+    private String startTime;
+
+    @Pattern(regexp = "^([01]\\d|2[0-3]):[0-5]\\d$", message = "End time must be HH:mm")
+    private String endTime;
+
     @Size(max = 150)
     private String venue;
+
+    @Size(max = 150)
+    private String organiser;
 
     @Size(max = 50)
     private String targetAudience;

@@ -41,8 +41,18 @@ public class CalendarEvent extends BaseAuditEntity {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    /** "HH:mm"; null for an all-day event */
+    @Column(name = "start_time", length = 5)
+    private String startTime;
+
+    @Column(name = "end_time", length = 5)
+    private String endTime;
+
     @Column(name = "venue", length = 150)
     private String venue;
+
+    @Column(name = "organiser", length = 150)
+    private String organiser;
 
     @Column(name = "target_audience", length = 50)
     @Builder.Default

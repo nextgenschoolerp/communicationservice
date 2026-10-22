@@ -36,6 +36,9 @@ public final class CommunicationRoles {
     /** Document notification dispatcher */
     public static final String DOCUMENT_DISPATCH = "hasAnyRole('SYSTEM_AUTOMATION', 'ACCOUNTANT', 'PAYROLL_ACCOUNTANT', 'SUPER_ADMIN', 'ADMIN')";
 
+    /** School document library: folders, uploads and who can view a file */
+    public static final String DOCUMENT_MANAGE = "hasAnyRole('PUBLIC_RELATIONS_OFFICER', 'COMMUNICATION_OFFICER', 'PRINCIPAL', 'SCHOOL_PRINCIPAL', 'ADMIN_CLERK', 'SUPER_ADMIN', 'ADMIN')";
+
     /** Any authenticated user in communication */
     public static final String ANY_AUTHENTICATED = "isAuthenticated()";
 }

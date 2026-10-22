@@ -37,6 +37,17 @@ public class CommunityEngagementController {
                         .build());
     }
 
+    @PutMapping("/calendar-events/{eventId}")
+    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    public ResponseEntity<ApiResponse<CalendarEventResponse>> updateCalendarEvent(
+            @PathVariable("eventId") UUID eventId, @Valid @RequestBody CalendarEventRequest request) {
+        return ResponseEntity.ok(ApiResponse.<CalendarEventResponse>builder()
+                .success(true)
+                .message("School calendar event updated successfully")
+                .data(communityService.updateCalendarEvent(eventId, request))
+                .build());
+    }
+
     @GetMapping("/calendar-events")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<CalendarEventResponse>>> listCalendarEvents(

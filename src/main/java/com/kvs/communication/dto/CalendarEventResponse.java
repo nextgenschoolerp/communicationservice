@@ -19,7 +19,10 @@ public class CalendarEventResponse {
     private String eventType;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String startTime;
+    private String endTime;
     private String venue;
+    private String organiser;
     private String targetAudience;
     private String mediaUrls;
     private Boolean isPublished;

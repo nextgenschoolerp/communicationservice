@@ -1,5 +1,6 @@
 package com.kvs.communication.service;
 
+import com.kvs.core.exception.BadRequestException;
 import com.kvs.core.exception.ResourceNotFoundException;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.entity.*;
@@ -40,11 +41,15 @@ public class CommunityEngagementService {
                 .eventType(request.getEventType())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
+                .startTime(request.getStartTime())
+                .endTime(request.getEndTime())
                 .venue(request.getVenue())
+                .organiser(request.getOrganiser())
                 .targetAudience(request.getTargetAudience() != null ? request.getTargetAudience() : "ALL")
                 .mediaUrls(request.getMediaUrls())
                 .isPublished(request.getIsPublished() != null ? request.getIsPublished() : true)
                 .build();
+        checkDates(event);
 
         event = calendarRepository.save(event);
 
@@ -52,6 +57,41 @@ public class CommunityEngagementService {
                 "Published calendar event '" + event.getTitle() + "' (" + event.getStartDate() + " to " + event.getEndDate() + ")");
 
         return mapToEventResponse(event);
+    }
+
+    // Calendar page "Edit": change an event's details, dates and times
+    @Transactional
+    public CalendarEventResponse updateCalendarEvent(UUID eventId, CalendarEventRequest request) {
+        CalendarEvent event = calendarRepository.findById(eventId)
+                .orElseThrow(() -> new ResourceNotFoundException("CalendarEvent", "eventId", eventId));
+        event.setTitle(request.getTitle());
+        event.setDescription(request.getDescription());
+        event.setEventType(request.getEventType());
+        event.setStartDate(request.getStartDate());
+        event.setEndDate(request.getEndDate());
+        event.setStartTime(request.getStartTime());
+        event.setEndTime(request.getEndTime());
+        event.setVenue(request.getVenue());
+        event.setOrganiser(request.getOrganiser());
+        if (request.getTargetAudience() != null) {
+            event.setTargetAudience(request.getTargetAudience());
+        }
+        if (request.getIsPublished() != null) {
+            event.setIsPublished(request.getIsPublished());
+        }
+        checkDates(event);
+        auditService.logSuccess("CalendarEvent", "UPDATE_EVENT", "Updated calendar event " + eventId);
+        return mapToEventResponse(event);
+    }
+
+    private static void checkDates(CalendarEvent event) {
+        if (event.getEndDate().isBefore(event.getStartDate())) {
+            throw new BadRequestException("End date must be on or after the start date");
+        }
+        if (event.getStartTime() != null && event.getEndTime() != null && event.getStartDate().equals(event.getEndDate())
+                && event.getEndTime().compareTo(event.getStartTime()) < 0) {
+            throw new BadRequestException("End time must be after the start time");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -274,7 +314,10 @@ public class CommunityEngagementService {
                 .eventType(e.getEventType())
                 .startDate(e.getStartDate())
                 .endDate(e.getEndDate())
+                .startTime(e.getStartTime())
+                .endTime(e.getEndTime())
                 .venue(e.getVenue())
+                .organiser(e.getOrganiser())
                 .targetAudience(e.getTargetAudience())
                 .mediaUrls(e.getMediaUrls())
                 .isPublished(e.getIsPublished())

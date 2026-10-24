@@ -23,7 +23,7 @@ public class FeedbackSurvey extends BaseAuditEntity {
     private UUID surveyId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "title", nullable = false, length = 200)
     private String title;

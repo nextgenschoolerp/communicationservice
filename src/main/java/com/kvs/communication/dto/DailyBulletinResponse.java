@@ -13,7 +13,7 @@ import java.util.UUID;
 public class DailyBulletinResponse {
 
     private UUID bulletinId;
-    private UUID tenantId;
+    private String tenantId;
     private String bulletinType;
     private String title;
     private String contentDetails;

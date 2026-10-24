@@ -31,6 +31,19 @@ public class VisitorService {
     @Transactional
     public VisitorAppointmentResponse registerVisitor(VisitorAppointmentRequest request) {
         String badge = "VIS-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        String hostStaffName = (request.getHostStaffName() != null && !request.getHostStaffName().isBlank())
+                ? request.getHostStaffName()
+                : "School Administration";
+        Instant appointmentTime = request.getAppointmentTime() != null
+                ? request.getAppointmentTime()
+                : Instant.now();
+
+        UUID hostStaffUuid = null;
+        if (request.getHostStaffId() != null && !request.getHostStaffId().isBlank()) {
+            try {
+                hostStaffUuid = UUID.fromString(request.getHostStaffId());
+            } catch (IllegalArgumentException ignored) {}
+        }
 
         VisitorAppointment appointment = VisitorAppointment.builder()
                 .tenantId(request.getTenantId())
@@ -39,9 +52,9 @@ public class VisitorService {
                 .visitorIdType(request.getVisitorIdType())
                 .visitorIdNumber(request.getVisitorIdNumber())
                 .purpose(request.getPurpose())
-                .hostStaffId(request.getHostStaffId())
-                .hostStaffName(request.getHostStaffName())
-                .appointmentTime(request.getAppointmentTime())
+                .hostStaffId(hostStaffUuid)
+                .hostStaffName(hostStaffName)
+                .appointmentTime(appointmentTime)
                 .badgeNumber(badge)
                 .status("SCHEDULED")
                 .build();
@@ -88,7 +101,7 @@ public class VisitorService {
     }
 
     @Transactional(readOnly = true)
-    public List<VisitorAppointmentResponse> listAppointments(UUID tenantId) {
+    public List<VisitorAppointmentResponse> listAppointments(String tenantId) {
         return visitorRepository.findByTenantIdOrderByAppointmentTimeDesc(tenantId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -136,7 +149,7 @@ public class VisitorService {
     }
 
     @Transactional(readOnly = true)
-    public List<AppointmentSlotResponse> getAvailableSlots(UUID tenantId, LocalDate date) {
+    public List<AppointmentSlotResponse> getAvailableSlots(String tenantId, LocalDate date) {
         LocalDate searchDate = date != null ? date : LocalDate.now();
         return slotRepository.findByTenantIdAndSlotDateOrderByStartTimeAsc(tenantId, searchDate).stream()
                 .map(this::mapToSlotResponse)
@@ -158,6 +171,7 @@ public class VisitorService {
                 .checkInTime(v.getCheckInTime())
                 .checkOutTime(v.getCheckOutTime())
                 .badgeNumber(v.getBadgeNumber())
+                .visitorBadgeNumber(v.getBadgeNumber())
                 .status(v.getStatus())
                 .createdAt(v.getCreatedAt())
                 .build();

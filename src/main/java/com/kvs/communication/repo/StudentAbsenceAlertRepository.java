@@ -11,7 +11,11 @@ import java.util.UUID;
 @Repository
 public interface StudentAbsenceAlertRepository extends JpaRepository<StudentAbsenceAlert, UUID> {
 
-    List<StudentAbsenceAlert> findByTenantIdAndAbsenceDate(UUID tenantId, LocalDate date);
+    List<StudentAbsenceAlert> findByTenantId(String tenantId);
 
-    List<StudentAbsenceAlert> findByTenantIdAndStudentId(UUID tenantId, UUID studentId);
+    List<StudentAbsenceAlert> findByTenantIdOrderByCreatedAtDesc(String tenantId);
+
+    List<StudentAbsenceAlert> findByTenantIdAndAbsenceDate(String tenantId, LocalDate date);
+
+    List<StudentAbsenceAlert> findByTenantIdAndStudentId(String tenantId, UUID studentId);
 }

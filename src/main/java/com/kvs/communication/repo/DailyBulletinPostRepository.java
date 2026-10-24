@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface DailyBulletinPostRepository extends JpaRepository<DailyBulletinPost, UUID> {
 
-    List<DailyBulletinPost> findByTenantIdAndEffectiveDate(UUID tenantId, LocalDate date);
+    List<DailyBulletinPost> findByTenantIdAndEffectiveDate(String tenantId, LocalDate date);
 
-    List<DailyBulletinPost> findByTenantIdAndBulletinTypeAndEffectiveDate(UUID tenantId, String type, LocalDate date);
+    List<DailyBulletinPost> findByTenantIdAndBulletinTypeAndEffectiveDate(String tenantId, String type, LocalDate date);
 }

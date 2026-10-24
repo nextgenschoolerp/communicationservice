@@ -26,7 +26,7 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
 
         BroadcastRequest req = BroadcastRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .senderName("Public Relations Officer")
                 .title("Annual Sports Day Circular 2026")
                 .messageBody("All students and parents are cordially invited to the 2026 Annual Sports Meet.")
@@ -35,7 +35,7 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
                 .priority(BroadcastPriority.NORMAL)
                 .build();
 
-        JsonNode node = data(postJson("/broadcasts", proToken, req).andExpect(status().isCreated()));
+        JsonNode node = data(postJson("/broadcasts", proToken, req).andExpect(status().isOk()));
         UUID broadcastId = UUID.fromString(node.get("broadcastId").asText());
         assertThat(node.get("title").asText()).isEqualTo("Annual Sports Day Circular 2026");
         assertThat(node.get("channel").asText()).isEqualTo("MULTI_CHANNEL");
@@ -56,14 +56,14 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
 
         EmergencyAlertRequest req = EmergencyAlertRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .senderName("Principal Office")
                 .title("EMERGENCY: Heavy Rainfall School Closure Alert")
                 .messageBody("Due to severe weather warnings, campus is closed today. Online classes will resume tomorrow.")
                 .targetAudience("ALL_STAKEHOLDERS")
                 .build();
 
-        JsonNode alertNode = data(postJson("/broadcasts/emergency", principalToken, req).andExpect(status().isCreated()));
+        JsonNode alertNode = data(postJson("/broadcasts/emergency", principalToken, req).andExpect(status().isOk()));
         assertThat(alertNode.get("priority").asText()).isEqualTo("EMERGENCY");
         assertThat(alertNode.get("isPinned").asBoolean()).isTrue();
     }
@@ -77,14 +77,14 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
         // Create broadcast first
         BroadcastRequest req = BroadcastRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .title("Bus Route Revision Circular")
                 .messageBody("Bus Route 14 pickup schedule revised by 10 minutes.")
                 .targetAudience("ROUTE_14_PARENTS")
                 .channel(ChannelType.WHATSAPP)
                 .build();
 
-        JsonNode bNode = data(postJson("/broadcasts", proToken, req).andExpect(status().isCreated()));
+        JsonNode bNode = data(postJson("/broadcasts", proToken, req).andExpect(status().isOk()));
         UUID broadcastId = UUID.fromString(bNode.get("broadcastId").asText());
 
         // Get delivery logs
@@ -111,14 +111,14 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
 
         BroadcastRequest req = BroadcastRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .title("Exam Admit Card Dispatch")
                 .messageBody("Download term 1 admit cards from portal.")
                 .targetAudience("GRADE_10")
                 .channel(ChannelType.PUSH)
                 .build();
 
-        JsonNode bNode = data(postJson("/broadcasts", proToken, req).andExpect(status().isCreated()));
+        JsonNode bNode = data(postJson("/broadcasts", proToken, req).andExpect(status().isOk()));
         UUID broadcastId = UUID.fromString(bNode.get("broadcastId").asText());
 
         PinBroadcastRequest pinReq = PinBroadcastRequest.builder()
@@ -140,14 +140,14 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
 
         BroadcastRequest req = BroadcastRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .title("Past Academic Session Circular 2024")
                 .messageBody("Archived record.")
                 .targetAudience("ALL")
                 .channel(ChannelType.SMS)
                 .build();
 
-        JsonNode bNode = data(postJson("/broadcasts", proToken, req).andExpect(status().isCreated()));
+        JsonNode bNode = data(postJson("/broadcasts", proToken, req).andExpect(status().isOk()));
         UUID broadcastId = UUID.fromString(bNode.get("broadcastId").asText());
 
         ArchiveBroadcastRequest archiveReq = ArchiveBroadcastRequest.builder()
@@ -171,7 +171,7 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
         // 400 Bad Request on empty title
         BroadcastRequest invalidReq = BroadcastRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .title("") // Blank title fails validation
                 .messageBody("Some body")
                 .targetAudience("ALL")
@@ -186,7 +186,7 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
         // 403 Forbidden: parent trying to create broadcast circular
         BroadcastRequest validReq = BroadcastRequest.builder()
                 .tenantId(tenantId)
-                .senderUserId(UUID.randomUUID())
+                .senderUserId(UUID.randomUUID().toString())
                 .title("Valid Circular")
                 .messageBody("Valid Body")
                 .targetAudience("ALL")

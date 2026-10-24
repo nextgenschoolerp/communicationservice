@@ -12,7 +12,7 @@ import java.util.UUID;
 public class GateAuditLogResponse {
 
     private UUID auditId;
-    private UUID tenantId;
+    private String tenantId;
     private String gateId;
     private String gateName;
     private UUID passId;

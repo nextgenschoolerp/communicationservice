@@ -24,17 +24,16 @@ public class VisitorController {
     private final VisitorService visitorService;
 
     // US-09007: Register visitor appointments and issue digital visitor passes at reception
-    @PostMapping("/appointments")
+    @PostMapping({"", "/register", "/appointments"})
     @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
     public ResponseEntity<ApiResponse<VisitorAppointmentResponse>> registerVisitor(
             @Valid @RequestBody VisitorAppointmentRequest request) {
         VisitorAppointmentResponse data = visitorService.registerVisitor(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<VisitorAppointmentResponse>builder()
-                        .success(true)
-                        .message("Visitor appointment registered and digital badge issued")
-                        .data(data)
-                        .build());
+        return ResponseEntity.ok(ApiResponse.<VisitorAppointmentResponse>builder()
+                .success(true)
+                .message("Visitor appointment registered and digital badge issued")
+                .data(data)
+                .build());
     }
 
     @PutMapping("/appointments/{appointmentId}/check-in")
@@ -62,10 +61,10 @@ public class VisitorController {
                 .build());
     }
 
-    @GetMapping("/appointments")
+    @GetMapping({"", "/appointments"})
     @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
     public ResponseEntity<ApiResponse<List<VisitorAppointmentResponse>>> listAppointments(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<VisitorAppointmentResponse> data = visitorService.listAppointments(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<VisitorAppointmentResponse>>builder()
                 .success(true)
@@ -104,7 +103,7 @@ public class VisitorController {
     @GetMapping("/slots")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<AppointmentSlotResponse>>> getAvailableSlots(
-            @RequestParam UUID tenantId,
+            @RequestParam String tenantId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<AppointmentSlotResponse> data = visitorService.getAvailableSlots(tenantId, date);
         return ResponseEntity.ok(ApiResponse.<List<AppointmentSlotResponse>>builder()

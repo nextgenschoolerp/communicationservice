@@ -25,7 +25,7 @@ public class GateAuditLog extends BaseAuditEntity {
     private UUID auditId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "gate_id", nullable = false, length = 50)
     private String gateId;

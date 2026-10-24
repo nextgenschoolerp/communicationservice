@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ParentStudentMappingRepository extends JpaRepository<ParentStudentMapping, UUID> {
 
-    List<ParentStudentMapping> findByParentUserId(UUID parentUserId);
+    List<ParentStudentMapping> findByParentUserId(String parentUserId);
 
-    Optional<ParentStudentMapping> findByParentUserIdAndStudentId(UUID parentUserId, UUID studentId);
+    Optional<ParentStudentMapping> findByParentUserIdAndStudentId(String parentUserId, UUID studentId);
 }

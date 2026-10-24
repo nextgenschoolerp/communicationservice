@@ -30,7 +30,7 @@ public class DocumentLibraryController {
 
     @GetMapping("/folders")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
-    public ResponseEntity<ApiResponse<List<DocumentFolderResponse>>> listFolders(@RequestParam("tenantId") UUID tenantId) {
+    public ResponseEntity<ApiResponse<List<DocumentFolderResponse>>> listFolders(@RequestParam("tenantId") String tenantId) {
         return ok("Document folders retrieved successfully", documentService.listFolders(tenantId));
     }
 
@@ -51,7 +51,7 @@ public class DocumentLibraryController {
 
     @GetMapping
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
-    public ResponseEntity<ApiResponse<List<SchoolDocumentResponse>>> listDocuments(@RequestParam("tenantId") UUID tenantId,
+    public ResponseEntity<ApiResponse<List<SchoolDocumentResponse>>> listDocuments(@RequestParam("tenantId") String tenantId,
                                                                                   @RequestParam(name = "folderId", required = false) UUID folderId) {
         return ok("Documents retrieved successfully", documentService.listDocuments(tenantId, folderId));
     }

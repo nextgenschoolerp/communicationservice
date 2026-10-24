@@ -67,12 +67,12 @@ class GatePassAndVisitorIntegrationTest extends CommunicationTestSupport {
                 .visitorIdType("AADHAAR")
                 .visitorIdNumber("998877665544")
                 .purpose("Parent Teacher Discussion regarding Olympiad")
-                .hostStaffId(teacherUserId)
+                .hostStaffId(teacherUserId.toString())
                 .hostStaffName("Dr. Kavya Nair")
                 .appointmentTime(Instant.now().plusSeconds(1800))
                 .build();
 
-        JsonNode vNode = data(postJson("/visitors/appointments", receptionistToken, req).andExpect(status().isCreated()));
+        JsonNode vNode = data(postJson("/visitors/appointments", receptionistToken, req).andExpect(status().isOk()));
         UUID appointmentId = UUID.fromString(vNode.get("appointmentId").asText());
         assertThat(vNode.get("badgeNumber").asText()).startsWith("VIS-");
         assertThat(vNode.get("status").asText()).isEqualTo("SCHEDULED");

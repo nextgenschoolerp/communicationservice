@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface GateAuditLogRepository extends JpaRepository<GateAuditLog, UUID> {
 
-    List<GateAuditLog> findByTenantIdOrderByTimestampDesc(UUID tenantId);
+    List<GateAuditLog> findByTenantIdOrderByTimestampDesc(String tenantId);
 
-    List<GateAuditLog> findByTenantIdAndEventType(UUID tenantId, String eventType);
+    List<GateAuditLog> findByTenantIdAndEventType(String tenantId, String eventType);
 }

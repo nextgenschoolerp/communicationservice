@@ -27,7 +27,7 @@ public class StudentAbsenceAlert extends BaseAuditEntity {
     private UUID alertId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "student_id", nullable = false)
     private UUID studentId;

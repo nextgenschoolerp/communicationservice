@@ -88,7 +88,7 @@ public class MobileAppService {
     }
 
     @Transactional(readOnly = true)
-    public List<ChildProfileResponse> getLinkedChildren(UUID parentUserId) {
+    public List<ChildProfileResponse> getLinkedChildren(String parentUserId) {
         return parentStudentMappingRepository.findByParentUserId(parentUserId).stream()
                 .map(this::mapToChildProfile)
                 .collect(Collectors.toList());
@@ -130,7 +130,7 @@ public class MobileAppService {
     }
 
     @Transactional(readOnly = true)
-    public NotificationPreferenceResponse getPreferences(UUID tenantId, UUID userId) {
+    public NotificationPreferenceResponse getPreferences(String tenantId, UUID userId) {
         NotificationPreference preference = notificationPreferenceRepository
                 .findByTenantIdAndUserId(tenantId, userId)
                 .orElseGet(() -> NotificationPreference.builder()

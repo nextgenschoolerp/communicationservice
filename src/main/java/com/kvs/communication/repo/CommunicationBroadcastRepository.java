@@ -10,11 +10,11 @@ import java.util.UUID;
 @Repository
 public interface CommunicationBroadcastRepository extends JpaRepository<CommunicationBroadcast, UUID> {
 
-    List<CommunicationBroadcast> findByTenantIdAndIsArchivedFalseOrderByCreatedAtDesc(UUID tenantId);
+    List<CommunicationBroadcast> findByTenantIdAndIsArchivedFalseOrderByCreatedAtDesc(String tenantId);
 
-    List<CommunicationBroadcast> findByTenantIdAndIsPinnedTrueOrderByCreatedAtDesc(UUID tenantId);
+    List<CommunicationBroadcast> findByTenantIdAndIsPinnedTrueOrderByCreatedAtDesc(String tenantId);
 
-    List<CommunicationBroadcast> findByTenantIdAndIsArchivedTrueOrderByArchivedAtDesc(UUID tenantId);
+    List<CommunicationBroadcast> findByTenantIdAndIsArchivedTrueOrderByArchivedAtDesc(String tenantId);
 
-    List<CommunicationBroadcast> findByTenantIdAndTargetAudience(UUID tenantId, String targetAudience);
+    List<CommunicationBroadcast> findByTenantIdAndTargetAudience(String tenantId, String targetAudience);
 }

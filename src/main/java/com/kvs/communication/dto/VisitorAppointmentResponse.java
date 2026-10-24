@@ -12,7 +12,7 @@ import java.util.UUID;
 public class VisitorAppointmentResponse {
 
     private UUID appointmentId;
-    private UUID tenantId;
+    private String tenantId;
     private String visitorName;
     private String visitorPhone;
     private String visitorIdType;
@@ -24,6 +24,12 @@ public class VisitorAppointmentResponse {
     private Instant checkInTime;
     private Instant checkOutTime;
     private String badgeNumber;
+    private String visitorBadgeNumber;
+
+    public String getVisitorBadgeNumber() {
+        return visitorBadgeNumber != null ? visitorBadgeNumber : badgeNumber;
+    }
+
     private String status;
     private Instant createdAt;
 }

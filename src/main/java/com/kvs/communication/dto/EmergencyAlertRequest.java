@@ -13,10 +13,14 @@ import java.util.UUID;
 public class EmergencyAlertRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
-    @NotNull(message = "Sender user ID is required")
-    private UUID senderUserId;
+    private String senderUserId;
+    private String senderId;
+
+    public String getSenderUserId() {
+        return senderUserId != null && !senderUserId.isBlank() ? senderUserId : senderId;
+    }
 
     private String senderName;
 

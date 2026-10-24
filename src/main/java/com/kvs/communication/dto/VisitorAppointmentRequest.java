@@ -15,7 +15,7 @@ import java.util.UUID;
 public class VisitorAppointmentRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotBlank(message = "Visitor name is required")
     @Size(max = 150)
@@ -34,12 +34,10 @@ public class VisitorAppointmentRequest {
     @NotBlank(message = "Purpose is required")
     private String purpose;
 
-    private UUID hostStaffId;
+    private String hostStaffId;
 
-    @NotBlank(message = "Host staff name is required")
     @Size(max = 150)
     private String hostStaffName;
 
-    @NotNull(message = "Appointment time is required")
     private Instant appointmentTime;
 }

@@ -15,7 +15,7 @@ import java.util.UUID;
 public class SupportTicketRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotBlank(message = "Requester is required")
     @Size(max = 100)

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class DeviceRegistrationRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "User ID is required")
     private UUID userId;

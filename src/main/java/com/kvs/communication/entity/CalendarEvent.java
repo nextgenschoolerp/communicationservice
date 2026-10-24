@@ -24,7 +24,7 @@ public class CalendarEvent extends BaseAuditEntity {
     private UUID eventId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "title", nullable = false, length = 200)
     private String title;

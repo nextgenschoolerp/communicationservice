@@ -174,21 +174,21 @@ public class BroadcastService {
     }
 
     @Transactional(readOnly = true)
-    public List<BroadcastResponse> getBroadcasts(UUID tenantId) {
+    public List<BroadcastResponse> getBroadcasts(String tenantId) {
         return broadcastRepository.findByTenantIdAndIsArchivedFalseOrderByCreatedAtDesc(tenantId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<BroadcastResponse> getPinnedBroadcasts(UUID tenantId) {
+    public List<BroadcastResponse> getPinnedBroadcasts(String tenantId) {
         return broadcastRepository.findByTenantIdAndIsPinnedTrueOrderByCreatedAtDesc(tenantId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<BroadcastResponse> getArchivedBroadcasts(UUID tenantId) {
+    public List<BroadcastResponse> getArchivedBroadcasts(String tenantId) {
         return broadcastRepository.findByTenantIdAndIsArchivedTrueOrderByArchivedAtDesc(tenantId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());

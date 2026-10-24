@@ -24,7 +24,7 @@ public class DailyBulletinPost extends BaseAuditEntity {
     private UUID bulletinId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "bulletin_type", nullable = false, length = 30)
     private String bulletinType; // CAFETERIA_MENU, BUS_SCHEDULE

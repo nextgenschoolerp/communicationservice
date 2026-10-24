@@ -12,7 +12,7 @@ import java.util.UUID;
 public class FeedbackSurveyResponse {
 
     private UUID surveyId;
-    private UUID tenantId;
+    private String tenantId;
     private String title;
     private String description;
     private String surveyType;

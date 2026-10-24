@@ -27,7 +27,7 @@ public class GrievanceTicket extends BaseAuditEntity {
     private UUID ticketId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "parent_user_id", nullable = false)
     private UUID parentUserId;

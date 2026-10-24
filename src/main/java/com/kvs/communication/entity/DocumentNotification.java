@@ -24,7 +24,7 @@ public class DocumentNotification extends BaseAuditEntity {
     private UUID notificationId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "document_type", nullable = false, length = 50)
     private String documentType; // FEE_RECEIPT, REPORT_CARD

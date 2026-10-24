@@ -12,11 +12,11 @@ import java.util.UUID;
 public class MessageResponse {
 
     private UUID messageId;
-    private UUID tenantId;
-    private UUID senderId;
+    private String tenantId;
+    private String senderId;
     private String senderName;
     private String senderRole;
-    private UUID recipientId;
+    private String recipientId;
     private String recipientName;
     private UUID studentId;
     private UUID threadId;

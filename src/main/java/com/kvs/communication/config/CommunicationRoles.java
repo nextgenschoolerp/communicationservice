@@ -16,19 +16,19 @@ public final class CommunicationRoles {
     public static final String SYSTEM_OR_ADMIN = "hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'SUPER_ADMIN', 'ADMIN')";
 
     /** Parent users */
-    public static final String PARENT_ONLY = "hasAnyRole('PARENT', 'SUPER_ADMIN', 'ADMIN')";
+    public static final String PARENT_ONLY = "hasAnyRole('PARENT', 'APPLICANT_PARENT', 'SUPER_ADMIN', 'ADMIN')";
 
     /** Teachers and Parents for confidential messaging */
-    public static final String MESSAGING_ACCESS = "hasAnyRole('PARENT', 'TEACHER', 'SUBJECT_TEACHER', 'CLASS_TEACHER', 'SUPER_ADMIN', 'ADMIN')";
+    public static final String MESSAGING_ACCESS = "hasAnyRole('PARENT', 'APPLICANT_PARENT', 'TEACHER', 'SUBJECT_TEACHER', 'CLASS_TEACHER', 'SUPER_ADMIN', 'ADMIN')";
 
     /** Parent gate pass generation */
-    public static final String GATE_PASS_REQUEST = "hasAnyRole('PARENT', 'RECEPTIONIST', 'SUPER_ADMIN', 'ADMIN')";
+    public static final String GATE_PASS_REQUEST = "hasAnyRole('PARENT', 'APPLICANT_PARENT', 'RECEPTIONIST', 'SUPER_ADMIN', 'ADMIN')";
 
     /** Security Guards scanning gate passes & auditing gates */
     public static final String SECURITY_SCAN = "hasAnyRole('SECURITY_GUARD', 'SUPER_ADMIN', 'ADMIN')";
 
     /** Reception desk & Visitor handling */
-    public static final String RECEPTION_DESK = "hasAnyRole('RECEPTIONIST', 'FRONT_OFFICE_COUNSELOR', 'ADMIN_CLERK', 'SUPER_ADMIN', 'ADMIN')";
+    public static final String RECEPTION_DESK = "hasAnyRole('RECEPTIONIST', 'FRONT_OFFICE_COUNSELOR', 'ADMIN_CLERK', 'PRINCIPAL', 'SCHOOL_PRINCIPAL', 'SUPER_ADMIN', 'ADMIN')";
 
     /** Emergency announcements & Pinned circulars by leadership */
     public static final String LEADERSHIP_OR_ADMIN = "hasAnyRole('PRINCIPAL', 'SCHOOL_PRINCIPAL', 'SUPER_ADMIN', 'ADMIN')";

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class GateAuditLogRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotBlank(message = "Gate ID is required")
     @Size(max = 50)

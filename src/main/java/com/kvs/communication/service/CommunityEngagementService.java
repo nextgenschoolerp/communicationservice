@@ -95,7 +95,7 @@ public class CommunityEngagementService {
     }
 
     @Transactional(readOnly = true)
-    public List<CalendarEventResponse> listPublishedEvents(UUID tenantId) {
+    public List<CalendarEventResponse> listPublishedEvents(String tenantId) {
         return calendarRepository.findByTenantIdAndIsPublishedTrueOrderByStartDateAsc(tenantId).stream()
                 .map(this::mapToEventResponse)
                 .collect(Collectors.toList());
@@ -153,7 +153,7 @@ public class CommunityEngagementService {
     }
 
     @Transactional(readOnly = true)
-    public List<GrievanceTicketResponse> listGrievances(UUID tenantId) {
+    public List<GrievanceTicketResponse> listGrievances(String tenantId) {
         return grievanceRepository.findByTenantIdOrderByCreatedAtDesc(tenantId).stream()
                 .map(this::mapToGrievanceResponse)
                 .collect(Collectors.toList());
@@ -181,7 +181,7 @@ public class CommunityEngagementService {
     }
 
     @Transactional(readOnly = true)
-    public List<DailyBulletinResponse> listDailyBulletins(UUID tenantId, LocalDate date) {
+    public List<DailyBulletinResponse> listDailyBulletins(String tenantId, LocalDate date) {
         LocalDate searchDate = date != null ? date : LocalDate.now();
         return bulletinRepository.findByTenantIdAndEffectiveDate(tenantId, searchDate).stream()
                 .map(this::mapToBulletinResponse)
@@ -288,7 +288,7 @@ public class CommunityEngagementService {
     }
 
     @Transactional(readOnly = true)
-    public List<DocumentNotificationResponse> listDocumentNotifications(UUID tenantId, UUID studentId) {
+    public List<DocumentNotificationResponse> listDocumentNotifications(String tenantId, UUID studentId) {
         return documentNotificationRepository.findByTenantIdAndStudentId(tenantId, studentId).stream()
                 .map(d -> DocumentNotificationResponse.builder()
                         .notificationId(d.getNotificationId())

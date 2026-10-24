@@ -25,10 +25,10 @@ public class ConfidentialMessage extends BaseAuditEntity {
     private UUID messageId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
-    @Column(name = "sender_id", nullable = false)
-    private UUID senderId;
+    @Column(name = "sender_id", nullable = false, length = 100)
+    private String senderId;
 
     @Column(name = "sender_name", nullable = false, length = 150)
     private String senderName;
@@ -36,8 +36,8 @@ public class ConfidentialMessage extends BaseAuditEntity {
     @Column(name = "sender_role", nullable = false, length = 50)
     private String senderRole;
 
-    @Column(name = "recipient_id", nullable = false)
-    private UUID recipientId;
+    @Column(name = "recipient_id", nullable = false, length = 100)
+    private String recipientId;
 
     @Column(name = "recipient_name", nullable = false, length = 150)
     private String recipientName;

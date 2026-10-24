@@ -15,7 +15,7 @@ import java.util.UUID;
 public class GrievanceTicketRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "Parent user ID is required")
     private UUID parentUserId;

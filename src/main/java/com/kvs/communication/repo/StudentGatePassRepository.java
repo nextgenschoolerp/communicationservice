@@ -14,7 +14,7 @@ public interface StudentGatePassRepository extends JpaRepository<StudentGatePass
 
     Optional<StudentGatePass> findByQrCode(String qrCode);
 
-    List<StudentGatePass> findByTenantIdAndStudentId(UUID tenantId, UUID studentId);
+    List<StudentGatePass> findByTenantIdAndStudentId(String tenantId, UUID studentId);
 
-    List<StudentGatePass> findByTenantIdAndStatus(UUID tenantId, GatePassStatus status);
+    List<StudentGatePass> findByTenantIdAndStatus(String tenantId, GatePassStatus status);
 }

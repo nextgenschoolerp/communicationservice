@@ -11,9 +11,9 @@ import java.util.UUID;
 @Repository
 public interface GrievanceTicketRepository extends JpaRepository<GrievanceTicket, UUID> {
 
-    List<GrievanceTicket> findByTenantIdAndStatus(UUID tenantId, TicketStatus status);
+    List<GrievanceTicket> findByTenantIdAndStatus(String tenantId, TicketStatus status);
 
-    List<GrievanceTicket> findByTenantIdAndParentUserIdOrderByCreatedAtDesc(UUID tenantId, UUID parentUserId);
+    List<GrievanceTicket> findByTenantIdAndParentUserIdOrderByCreatedAtDesc(String tenantId, UUID parentUserId);
 
-    List<GrievanceTicket> findByTenantIdOrderByCreatedAtDesc(UUID tenantId);
+    List<GrievanceTicket> findByTenantIdOrderByCreatedAtDesc(String tenantId);
 }

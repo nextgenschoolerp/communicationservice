@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface DocumentFolderRepository extends JpaRepository<DocumentFolder, UUID> {
 
-    List<DocumentFolder> findByTenantIdOrderBySortOrderAscNameAsc(UUID tenantId);
+    List<DocumentFolder> findByTenantIdOrderBySortOrderAscNameAsc(String tenantId);
 
-    boolean existsByTenantIdAndNameIgnoreCase(UUID tenantId, String name);
+    boolean existsByTenantIdAndNameIgnoreCase(String tenantId, String name);
 }

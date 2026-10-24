@@ -12,7 +12,7 @@ import java.util.UUID;
 public class DeviceRegistrationResponse {
 
     private UUID registrationId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID userId;
     private String deviceToken;
     private String platform;

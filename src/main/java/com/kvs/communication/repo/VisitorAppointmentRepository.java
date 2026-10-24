@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface VisitorAppointmentRepository extends JpaRepository<VisitorAppointment, UUID> {
 
-    List<VisitorAppointment> findByTenantIdAndStatus(UUID tenantId, String status);
+    List<VisitorAppointment> findByTenantIdAndStatus(String tenantId, String status);
 
-    List<VisitorAppointment> findByTenantIdOrderByAppointmentTimeDesc(UUID tenantId);
+    List<VisitorAppointment> findByTenantIdOrderByAppointmentTimeDesc(String tenantId);
 }

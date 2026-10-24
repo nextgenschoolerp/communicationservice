@@ -15,7 +15,7 @@ import java.util.UUID;
 public class AbsenceAlertRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "Student ID is required")
     private UUID studentId;
@@ -28,12 +28,14 @@ public class AbsenceAlertRequest {
     @Size(max = 20)
     private String guardianPhone;
 
-    @NotBlank(message = "Guardian name is required")
     @Size(max = 150)
     private String guardianName;
 
-    @NotNull(message = "Absence date is required")
     private LocalDate absenceDate;
 
     private String alertChannel;
+
+    private String grade;
+
+    private String section;
 }

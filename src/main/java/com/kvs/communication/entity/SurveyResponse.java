@@ -24,7 +24,7 @@ public class SurveyResponse extends BaseAuditEntity {
     private UUID responseId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "survey_id", nullable = false)
     private UUID surveyId;

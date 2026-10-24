@@ -15,7 +15,7 @@ import java.util.UUID;
 public class DailyBulletinRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotBlank(message = "Bulletin type is required (e.g., CAFETERIA_MENU, BUS_SCHEDULE)")
     @Size(max = 30)

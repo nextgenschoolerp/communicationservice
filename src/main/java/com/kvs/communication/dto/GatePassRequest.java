@@ -14,7 +14,7 @@ import java.util.UUID;
 public class GatePassRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "Student ID is required")
     private UUID studentId;

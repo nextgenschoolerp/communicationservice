@@ -15,7 +15,7 @@ import java.util.UUID;
 public class AppointmentSlotRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "Host user ID is required")
     private UUID hostUserId;

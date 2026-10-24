@@ -16,7 +16,7 @@ import java.util.UUID;
 public class CalendarEventRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotBlank(message = "Title is required")
     @Size(max = 200)

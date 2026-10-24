@@ -29,8 +29,8 @@ public abstract class CommunicationTestSupport {
     @Autowired protected JwtTokenService jwtTokenService;
 
     protected final String run = UUID.randomUUID().toString().substring(0, 8);
-    protected final String tenant = "T-COMM-" + run;
-    protected final UUID tenantId = UUID.nameUUIDFromBytes(("T-COMM-" + run).getBytes());
+    protected final String tenantId = "T-COMM-" + run;
+    protected final String tenant = tenantId;
     protected final UUID parentUserId = UUID.randomUUID();
     protected final UUID teacherUserId = UUID.randomUUID();
     protected final UUID studentId = UUID.randomUUID();

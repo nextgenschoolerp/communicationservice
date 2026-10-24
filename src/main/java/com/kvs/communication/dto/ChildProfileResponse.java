@@ -11,8 +11,8 @@ import java.util.UUID;
 public class ChildProfileResponse {
 
     private UUID mappingId;
-    private UUID tenantId;
-    private UUID parentUserId;
+    private String tenantId;
+    private String parentUserId;
     private String parentName;
     private UUID studentId;
     private String studentName;

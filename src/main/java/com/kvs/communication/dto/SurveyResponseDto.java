@@ -12,7 +12,7 @@ import java.util.UUID;
 public class SurveyResponseDto {
 
     private UUID responseId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID surveyId;
     private UUID parentUserId;
     private String parentName;

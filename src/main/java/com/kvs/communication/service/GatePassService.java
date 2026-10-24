@@ -122,14 +122,14 @@ public class GatePassService {
     }
 
     @Transactional(readOnly = true)
-    public List<GateAuditLogResponse> getGateAuditLogs(UUID tenantId) {
+    public List<GateAuditLogResponse> getGateAuditLogs(String tenantId) {
         return gateAuditLogRepository.findByTenantIdOrderByTimestampDesc(tenantId).stream()
                 .map(this::mapToAuditResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<GatePassResponse> getStudentGatePasses(UUID tenantId, UUID studentId) {
+    public List<GatePassResponse> getStudentGatePasses(String tenantId, UUID studentId) {
         return gatePassRepository.findByTenantIdAndStudentId(tenantId, studentId).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());

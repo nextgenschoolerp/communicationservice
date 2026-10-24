@@ -51,7 +51,7 @@ public class CommunityEngagementController {
     @GetMapping("/calendar-events")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<CalendarEventResponse>>> listCalendarEvents(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<CalendarEventResponse> data = communityService.listPublishedEvents(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<CalendarEventResponse>>builder()
                 .success(true)
@@ -90,7 +90,7 @@ public class CommunityEngagementController {
     @GetMapping("/grievances")
     @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
     public ResponseEntity<ApiResponse<List<GrievanceTicketResponse>>> listGrievances(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<GrievanceTicketResponse> data = communityService.listGrievances(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<GrievanceTicketResponse>>builder()
                 .success(true)
@@ -116,7 +116,7 @@ public class CommunityEngagementController {
     @GetMapping("/bulletins")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<DailyBulletinResponse>>> listBulletins(
-            @RequestParam UUID tenantId,
+            @RequestParam String tenantId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<DailyBulletinResponse> data = communityService.listDailyBulletins(tenantId, date);
         return ResponseEntity.ok(ApiResponse.<List<DailyBulletinResponse>>builder()
@@ -182,7 +182,7 @@ public class CommunityEngagementController {
     @GetMapping("/documents/notifications")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<DocumentNotificationResponse>>> listDocumentNotifications(
-            @RequestParam UUID tenantId,
+            @RequestParam String tenantId,
             @RequestParam UUID studentId) {
         List<DocumentNotificationResponse> data = communityService.listDocumentNotifications(tenantId, studentId);
         return ResponseEntity.ok(ApiResponse.<List<DocumentNotificationResponse>>builder()

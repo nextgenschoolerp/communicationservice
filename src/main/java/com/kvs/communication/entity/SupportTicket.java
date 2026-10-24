@@ -27,7 +27,7 @@ public class SupportTicket extends BaseAuditEntity {
     private UUID ticketId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     /** e.g. SUP-1049 */
     @Column(name = "ticket_number", nullable = false, length = 20)

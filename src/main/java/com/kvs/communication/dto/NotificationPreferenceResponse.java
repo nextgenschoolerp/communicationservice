@@ -11,7 +11,7 @@ import java.util.UUID;
 public class NotificationPreferenceResponse {
 
     private UUID preferenceId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID userId;
     private Boolean whatsappEnabled;
     private Boolean smsEnabled;

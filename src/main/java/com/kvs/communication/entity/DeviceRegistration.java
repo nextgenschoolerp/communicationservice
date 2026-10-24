@@ -25,7 +25,7 @@ public class DeviceRegistration extends BaseAuditEntity {
     private UUID registrationId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;

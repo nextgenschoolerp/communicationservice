@@ -70,8 +70,21 @@ public class MessagingService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageResponse> getUserInbox(UUID recipientId) {
+    public List<MessageResponse> getUserInbox(String recipientId) {
         return messageRepository.findByRecipientIdOrderByCreatedAtDesc(recipientId).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MessageResponse> getConversations(String userId) {
+        List<ConfidentialMessage> messages;
+        if (userId != null && !userId.isBlank()) {
+            messages = messageRepository.findBySenderIdOrRecipientIdOrderByCreatedAtDesc(userId, userId);
+        } else {
+            messages = messageRepository.findAll();
+        }
+        return messages.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

@@ -25,7 +25,7 @@ public class SupportTicketService {
     private final CommunicationAuditService auditService;
 
     @Transactional(readOnly = true)
-    public List<SupportTicketResponse> list(UUID tenantId, String requesterUserId) {
+    public List<SupportTicketResponse> list(String tenantId, String requesterUserId) {
         List<SupportTicket> tickets = requesterUserId == null || requesterUserId.isBlank()
                 ? ticketRepository.findByTenantIdOrderByLastActivityAtDesc(tenantId)
                 : ticketRepository.findByTenantIdAndRequesterUserIdOrderByLastActivityAtDesc(tenantId, requesterUserId);

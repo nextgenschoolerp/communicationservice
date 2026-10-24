@@ -24,10 +24,10 @@ public class ParentStudentMapping extends BaseAuditEntity {
     private UUID mappingId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
-    @Column(name = "parent_user_id", nullable = false)
-    private UUID parentUserId;
+    @Column(name = "parent_user_id", nullable = false, length = 100)
+    private String parentUserId;
 
     @Column(name = "parent_phone", nullable = false, length = 20)
     private String parentPhone;

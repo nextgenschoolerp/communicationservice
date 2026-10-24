@@ -14,7 +14,7 @@ import java.util.UUID;
 public class GrievanceTicketResponse {
 
     private UUID ticketId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID parentUserId;
     private String parentName;
     private UUID studentId;

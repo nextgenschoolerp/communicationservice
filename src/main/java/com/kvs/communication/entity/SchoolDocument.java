@@ -24,7 +24,7 @@ public class SchoolDocument extends BaseAuditEntity {
     private UUID documentId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "folder_id", nullable = false)
     private UUID folderId;

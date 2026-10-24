@@ -26,10 +26,10 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
         // Parent sends message to teacher
         SendMessageRequest parentMsg = SendMessageRequest.builder()
                 .tenantId(tenantId)
-                .senderId(parentUserId)
+                .senderId(parentUserId.toString())
                 .senderName("Rajesh Sharma")
                 .senderRole("ROLE_PARENT")
-                .recipientId(teacherUserId)
+                .recipientId(teacherUserId.toString())
                 .recipientName("Dr. Kavya Nair")
                 .studentId(studentId)
                 .threadId(threadId)
@@ -37,24 +37,24 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
                 .content("Dear Ma'am, please let us know if chapter 4 polynomials will be included in Monday's quiz.")
                 .build();
 
-        JsonNode msgNode = data(postJson("/messages", parentToken, parentMsg).andExpect(status().isCreated()));
+        JsonNode msgNode = data(postJson("/messages", parentToken, parentMsg).andExpect(status().isOk()));
         UUID messageId = UUID.fromString(msgNode.get("messageId").asText());
         assertThat(msgNode.get("isRead").asBoolean()).isFalse();
 
         // Teacher replies
         SendMessageRequest teacherReply = SendMessageRequest.builder()
                 .tenantId(tenantId)
-                .senderId(teacherUserId)
+                .senderId(teacherUserId.toString())
                 .senderName("Dr. Kavya Nair")
                 .senderRole("ROLE_TEACHER")
-                .recipientId(parentUserId)
+                .recipientId(parentUserId.toString())
                 .recipientName("Rajesh Sharma")
                 .studentId(studentId)
                 .threadId(threadId)
                 .subject("RE: Query regarding Mathematics Quiz 2 Syllabus")
                 .content("Dear Mr. Sharma, only chapters 1 to 3 are included in the upcoming quiz.")
                 .build();
-        data(postJson("/messages", teacherToken, teacherReply).andExpect(status().isCreated()));
+        data(postJson("/messages", teacherToken, teacherReply).andExpect(status().isOk()));
 
         // Mark first message read
         JsonNode readMsg = data(putJson("/messages/" + messageId + "/read", teacherToken, null).andExpect(status().isOk()));

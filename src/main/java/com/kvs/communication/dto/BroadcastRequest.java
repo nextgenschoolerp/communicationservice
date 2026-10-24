@@ -17,10 +17,14 @@ import java.util.UUID;
 public class BroadcastRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
-    @NotNull(message = "Sender User ID is required")
-    private UUID senderUserId;
+    private String senderUserId;
+    private String senderId;
+
+    public String getSenderUserId() {
+        return senderUserId != null && !senderUserId.isBlank() ? senderUserId : senderId;
+    }
 
     @Size(max = 150)
     private String senderName;

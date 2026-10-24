@@ -24,7 +24,7 @@ public class SupportTicketController {
 
     @GetMapping
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
-    public ResponseEntity<ApiResponse<List<SupportTicketResponse>>> list(@RequestParam("tenantId") UUID tenantId,
+    public ResponseEntity<ApiResponse<List<SupportTicketResponse>>> list(@RequestParam("tenantId") String tenantId,
                                                                          @RequestParam(name = "requesterUserId", required = false) String requesterUserId) {
         return ok("Support tickets retrieved successfully", supportService.list(tenantId, requesterUserId));
     }

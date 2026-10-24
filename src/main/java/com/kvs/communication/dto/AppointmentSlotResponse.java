@@ -12,7 +12,7 @@ import java.util.UUID;
 public class AppointmentSlotResponse {
 
     private UUID slotId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID hostUserId;
     private String hostName;
     private LocalDate slotDate;

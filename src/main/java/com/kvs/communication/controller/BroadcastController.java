@@ -27,18 +27,17 @@ public class BroadcastController {
     public ResponseEntity<ApiResponse<BroadcastResponse>> createBroadcast(
             @Valid @RequestBody BroadcastRequest request) {
         BroadcastResponse data = broadcastService.createBroadcast(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<BroadcastResponse>builder()
-                        .success(true)
-                        .message("Broadcast circular dispatched successfully")
-                        .data(data)
-                        .build());
+        return ResponseEntity.ok(ApiResponse.<BroadcastResponse>builder()
+                .success(true)
+                .message("Broadcast circular dispatched successfully")
+                .data(data)
+                .build());
     }
 
     @GetMapping
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<BroadcastResponse>>> getBroadcasts(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<BroadcastResponse> data = broadcastService.getBroadcasts(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<BroadcastResponse>>builder()
                 .success(true)
@@ -65,12 +64,11 @@ public class BroadcastController {
     public ResponseEntity<ApiResponse<BroadcastResponse>> sendEmergencyAlert(
             @Valid @RequestBody EmergencyAlertRequest request) {
         BroadcastResponse data = broadcastService.sendEmergencyAlert(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<BroadcastResponse>builder()
-                        .success(true)
-                        .message("Emergency broadcast dispatched to all stakeholders")
-                        .data(data)
-                        .build());
+        return ResponseEntity.ok(ApiResponse.<BroadcastResponse>builder()
+                .success(true)
+                .message("Emergency broadcast dispatched to all stakeholders")
+                .data(data)
+                .build());
     }
 
     // US-09011: Track delivery status and trigger SMS fallback on failure
@@ -116,7 +114,7 @@ public class BroadcastController {
     @GetMapping("/pinned")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<BroadcastResponse>>> getPinnedBroadcasts(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<BroadcastResponse> data = broadcastService.getPinnedBroadcasts(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<BroadcastResponse>>builder()
                 .success(true)
@@ -142,7 +140,7 @@ public class BroadcastController {
     @GetMapping("/archived")
     @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
     public ResponseEntity<ApiResponse<List<BroadcastResponse>>> getArchivedBroadcasts(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<BroadcastResponse> data = broadcastService.getArchivedBroadcasts(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<BroadcastResponse>>builder()
                 .success(true)

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class AbsenceAlertResponse {
 
     private UUID alertId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID studentId;
     private String studentName;
     private String guardianPhone;

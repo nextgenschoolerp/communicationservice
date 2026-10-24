@@ -16,7 +16,7 @@ import java.util.UUID;
 public class DocumentFolderRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @Size(max = 150, message = "Folder name must not exceed 150 characters")
     private String name;

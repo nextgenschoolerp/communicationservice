@@ -25,7 +25,7 @@ public class StaffAlertPreferenceController {
     @GetMapping
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<StaffAlertPreferenceDto>> get(@RequestParam("tenantId") UUID tenantId,
+    public ResponseEntity<ApiResponse<StaffAlertPreferenceDto>> get(@RequestParam("tenantId") String tenantId,
                                                                     @RequestParam("userId") String userId) {
         StaffAlertPreference p = repository.findByTenantIdAndUserId(tenantId, userId)
                 .orElseGet(() -> StaffAlertPreference.builder().tenantId(tenantId).userId(userId).build());

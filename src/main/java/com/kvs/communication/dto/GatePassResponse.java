@@ -13,7 +13,7 @@ import java.util.UUID;
 public class GatePassResponse {
 
     private UUID passId;
-    private UUID tenantId;
+    private String tenantId;
     private UUID studentId;
     private String studentName;
     private String grade;

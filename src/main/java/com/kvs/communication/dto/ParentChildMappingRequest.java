@@ -14,10 +14,10 @@ import java.util.UUID;
 public class ParentChildMappingRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "Parent user ID is required")
-    private UUID parentUserId;
+    private String parentUserId;
 
     @NotBlank(message = "Parent phone is required")
     @Size(max = 20)

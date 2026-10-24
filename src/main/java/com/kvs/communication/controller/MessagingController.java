@@ -16,24 +16,35 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/communication/messages")
+@RequestMapping({"/api/v1/communication/messaging", "/api/v1/communication/messages"})
 @RequiredArgsConstructor
 public class MessagingController {
 
     private final MessagingService messagingService;
 
     // US-09004: Facilitate secure two-way messaging between parents and class teachers
-    @PostMapping
+    @PostMapping({"", "/send"})
     @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
     public ResponseEntity<ApiResponse<MessageResponse>> sendMessage(
             @Valid @RequestBody SendMessageRequest request) {
         MessageResponse data = messagingService.sendMessage(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<MessageResponse>builder()
-                        .success(true)
-                        .message("Confidential message sent successfully")
-                        .data(data)
-                        .build());
+        return ResponseEntity.ok(ApiResponse.<MessageResponse>builder()
+                .success(true)
+                .message("Confidential message sent successfully")
+                .data(data)
+                .build());
+    }
+
+    @GetMapping({"", "/conversations"})
+    @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
+    public ResponseEntity<ApiResponse<List<MessageResponse>>> getConversations(
+            @RequestParam(required = false) String userId) {
+        List<MessageResponse> data = messagingService.getConversations(userId);
+        return ResponseEntity.ok(ApiResponse.<List<MessageResponse>>builder()
+                .success(true)
+                .message("Conversations retrieved successfully")
+                .data(data)
+                .build());
     }
 
     @GetMapping("/threads/{threadId}")
@@ -51,7 +62,7 @@ public class MessagingController {
     @GetMapping("/inbox/{recipientId}")
     @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
     public ResponseEntity<ApiResponse<List<MessageResponse>>> getUserInbox(
-            @PathVariable UUID recipientId) {
+            @PathVariable String recipientId) {
         List<MessageResponse> data = messagingService.getUserInbox(recipientId);
         return ResponseEntity.ok(ApiResponse.<List<MessageResponse>>builder()
                 .success(true)

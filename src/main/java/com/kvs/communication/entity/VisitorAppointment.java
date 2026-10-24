@@ -26,7 +26,7 @@ public class VisitorAppointment extends BaseAuditEntity {
     private UUID appointmentId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "visitor_name", nullable = false, length = 150)
     private String visitorName;

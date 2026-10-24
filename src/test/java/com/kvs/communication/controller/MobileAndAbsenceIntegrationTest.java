@@ -28,7 +28,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
                 .alertChannel("WHATSAPP")
                 .build();
 
-        JsonNode alertNode = data(postJson("/absence-alerts", sysToken, req).andExpect(status().isCreated()));
+        JsonNode alertNode = data(postJson("/absence-alerts", sysToken, req).andExpect(status().isOk()));
         UUID alertId = UUID.fromString(alertNode.get("alertId").asText());
         assertThat(alertNode.get("studentName").asText()).isEqualTo("Aarav Sharma");
         assertThat(alertNode.get("escalated").asBoolean()).isFalse();
@@ -68,7 +68,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
         // Map child 1
         ParentChildMappingRequest child1 = ParentChildMappingRequest.builder()
                 .tenantId(tenantId)
-                .parentUserId(parentUserId)
+                .parentUserId(parentUserId.toString())
                 .parentPhone("+919876543210")
                 .parentName("Rajesh Sharma")
                 .studentId(studentId)
@@ -84,7 +84,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
         UUID siblingId = UUID.randomUUID();
         ParentChildMappingRequest child2 = ParentChildMappingRequest.builder()
                 .tenantId(tenantId)
-                .parentUserId(parentUserId)
+                .parentUserId(parentUserId.toString())
                 .parentPhone("+919876543210")
                 .parentName("Rajesh Sharma")
                 .studentId(siblingId)

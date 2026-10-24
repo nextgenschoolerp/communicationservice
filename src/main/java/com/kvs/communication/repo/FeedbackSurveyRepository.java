@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface FeedbackSurveyRepository extends JpaRepository<FeedbackSurvey, UUID> {
 
-    List<FeedbackSurvey> findByTenantIdAndIsActiveTrue(UUID tenantId);
+    List<FeedbackSurvey> findByTenantIdAndIsActiveTrue(String tenantId);
 }

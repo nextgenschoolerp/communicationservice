@@ -25,21 +25,20 @@ public class AbsenceAlertController {
     private final AbsenceAlertService absenceAlertService;
 
     // US-09001: Dispatch automated alerts within 30 minutes of unexcused student absence
-    @PostMapping
-    @PreAuthorize(CommunicationRoles.SYSTEM_OR_ADMIN)
+    @PostMapping({"", "/trigger"})
+    @PreAuthorize("hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'TEACHER', 'CLASS_TEACHER', 'SUBJECT_TEACHER', 'SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<ApiResponse<AbsenceAlertResponse>> dispatchAbsenceAlert(
             @Valid @RequestBody AbsenceAlertRequest request) {
         AbsenceAlertResponse data = absenceAlertService.dispatchAbsenceAlert(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<AbsenceAlertResponse>builder()
-                        .success(true)
-                        .message("30-minute absence alert dispatched successfully")
-                        .data(data)
-                        .build());
+        return ResponseEntity.ok(ApiResponse.<AbsenceAlertResponse>builder()
+                .success(true)
+                .message("30-minute absence alert dispatched successfully")
+                .data(data)
+                .build());
     }
 
     @PostMapping("/{alertId}/escalate")
-    @PreAuthorize(CommunicationRoles.SYSTEM_OR_ADMIN)
+    @PreAuthorize("hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'TEACHER', 'CLASS_TEACHER', 'SUBJECT_TEACHER', 'SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<ApiResponse<AbsenceAlertResponse>> escalateAlert(
             @PathVariable UUID alertId) {
         AbsenceAlertResponse data = absenceAlertService.escalateAlert(alertId);
@@ -51,9 +50,9 @@ public class AbsenceAlertController {
     }
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.SYSTEM_OR_ADMIN)
+    @PreAuthorize("hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'TEACHER', 'CLASS_TEACHER', 'SUBJECT_TEACHER', 'SUPER_ADMIN', 'ADMIN')")
     public ResponseEntity<ApiResponse<List<AbsenceAlertResponse>>> getAbsenceAlerts(
-            @RequestParam UUID tenantId,
+            @RequestParam String tenantId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<AbsenceAlertResponse> data = absenceAlertService.getAbsenceAlerts(tenantId, date);
         return ResponseEntity.ok(ApiResponse.<List<AbsenceAlertResponse>>builder()

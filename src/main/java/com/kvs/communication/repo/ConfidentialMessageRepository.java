@@ -12,7 +12,9 @@ public interface ConfidentialMessageRepository extends JpaRepository<Confidentia
 
     List<ConfidentialMessage> findByThreadIdOrderByCreatedAtAsc(UUID threadId);
 
-    List<ConfidentialMessage> findByRecipientIdOrderByCreatedAtDesc(UUID recipientId);
+    List<ConfidentialMessage> findByRecipientIdOrderByCreatedAtDesc(String recipientId);
 
-    List<ConfidentialMessage> findBySenderIdOrderByCreatedAtDesc(UUID senderId);
+    List<ConfidentialMessage> findBySenderIdOrderByCreatedAtDesc(String senderId);
+
+    List<ConfidentialMessage> findBySenderIdOrRecipientIdOrderByCreatedAtDesc(String senderId, String recipientId);
 }

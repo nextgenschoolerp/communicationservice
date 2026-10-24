@@ -51,7 +51,7 @@ public class GatePassController {
     @GetMapping
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<GatePassResponse>>> getStudentGatePasses(
-            @RequestParam UUID tenantId,
+            @RequestParam String tenantId,
             @RequestParam UUID studentId) {
         List<GatePassResponse> data = gatePassService.getStudentGatePasses(tenantId, studentId);
         return ResponseEntity.ok(ApiResponse.<List<GatePassResponse>>builder()
@@ -78,7 +78,7 @@ public class GatePassController {
     @GetMapping("/audit-logs")
     @PreAuthorize(CommunicationRoles.SECURITY_SCAN)
     public ResponseEntity<ApiResponse<List<GateAuditLogResponse>>> getGateAuditLogs(
-            @RequestParam UUID tenantId) {
+            @RequestParam String tenantId) {
         List<GateAuditLogResponse> data = gatePassService.getGateAuditLogs(tenantId);
         return ResponseEntity.ok(ApiResponse.<List<GateAuditLogResponse>>builder()
                 .success(true)

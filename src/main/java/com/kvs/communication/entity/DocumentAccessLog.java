@@ -24,7 +24,7 @@ public class DocumentAccessLog extends BaseAuditEntity {
     private UUID logId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "document_id", nullable = false)
     private UUID documentId;

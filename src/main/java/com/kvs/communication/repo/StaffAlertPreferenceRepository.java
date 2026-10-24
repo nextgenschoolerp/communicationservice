@@ -10,5 +10,5 @@ import java.util.UUID;
 @Repository
 public interface StaffAlertPreferenceRepository extends JpaRepository<StaffAlertPreference, UUID> {
 
-    Optional<StaffAlertPreference> findByTenantIdAndUserId(UUID tenantId, String userId);
+    Optional<StaffAlertPreference> findByTenantIdAndUserId(String tenantId, String userId);
 }

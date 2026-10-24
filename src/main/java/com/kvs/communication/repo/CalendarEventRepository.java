@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface CalendarEventRepository extends JpaRepository<CalendarEvent, UUID> {
 
-    List<CalendarEvent> findByTenantIdAndIsPublishedTrueOrderByStartDateAsc(UUID tenantId);
+    List<CalendarEvent> findByTenantIdAndIsPublishedTrueOrderByStartDateAsc(String tenantId);
 
-    List<CalendarEvent> findByTenantIdAndStartDateBetween(UUID tenantId, LocalDate start, LocalDate end);
+    List<CalendarEvent> findByTenantIdAndStartDateBetween(String tenantId, LocalDate start, LocalDate end);
 }

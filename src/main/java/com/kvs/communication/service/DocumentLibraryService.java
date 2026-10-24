@@ -46,7 +46,7 @@ public class DocumentLibraryService {
     private String timeZone;
 
     @Transactional(readOnly = true)
-    public List<DocumentFolderResponse> listFolders(UUID tenantId) {
+    public List<DocumentFolderResponse> listFolders(String tenantId) {
         Map<UUID, Long> counts = documentRepository.findByTenantIdOrderByModifiedOnDescFileNameAsc(tenantId).stream()
                 .filter(d -> !Boolean.TRUE.equals(d.getIsArchived()))
                 .collect(Collectors.groupingBy(SchoolDocument::getFolderId, Collectors.counting()));
@@ -84,7 +84,7 @@ public class DocumentLibraryService {
     }
 
     @Transactional(readOnly = true)
-    public List<SchoolDocumentResponse> listDocuments(UUID tenantId, UUID folderId) {
+    public List<SchoolDocumentResponse> listDocuments(String tenantId, UUID folderId) {
         List<SchoolDocument> docs = folderId == null
                 ? documentRepository.findByTenantIdOrderByModifiedOnDescFileNameAsc(tenantId)
                 : documentRepository.findByTenantIdAndFolderIdOrderByModifiedOnDescFileNameAsc(tenantId, folderId);

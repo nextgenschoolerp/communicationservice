@@ -14,10 +14,10 @@ import java.util.UUID;
 public class SendMessageRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotNull(message = "Sender ID is required")
-    private UUID senderId;
+    private String senderId;
 
     @NotBlank(message = "Sender name is required")
     @Size(max = 150)
@@ -28,7 +28,7 @@ public class SendMessageRequest {
     private String senderRole;
 
     @NotNull(message = "Recipient ID is required")
-    private UUID recipientId;
+    private String recipientId;
 
     @NotBlank(message = "Recipient name is required")
     @Size(max = 150)

@@ -14,8 +14,8 @@ import java.util.UUID;
 public class BroadcastResponse {
 
     private UUID broadcastId;
-    private UUID tenantId;
-    private UUID senderUserId;
+    private String tenantId;
+    private String senderUserId;
     private String senderName;
     private String title;
     private String messageBody;

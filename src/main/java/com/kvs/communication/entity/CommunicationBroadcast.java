@@ -28,10 +28,10 @@ public class CommunicationBroadcast extends BaseAuditEntity {
     private UUID broadcastId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
-    @Column(name = "sender_user_id", nullable = false)
-    private UUID senderUserId;
+    @Column(name = "sender_user_id", nullable = false, length = 100)
+    private String senderUserId;
 
     @Column(name = "sender_name", length = 150)
     private String senderName;

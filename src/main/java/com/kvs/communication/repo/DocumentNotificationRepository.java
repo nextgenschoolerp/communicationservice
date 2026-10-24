@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface DocumentNotificationRepository extends JpaRepository<DocumentNotification, UUID> {
 
-    List<DocumentNotification> findByTenantIdAndStudentId(UUID tenantId, UUID studentId);
+    List<DocumentNotification> findByTenantIdAndStudentId(String tenantId, UUID studentId);
 
-    List<DocumentNotification> findByTenantIdAndDocumentType(UUID tenantId, String documentType);
+    List<DocumentNotification> findByTenantIdAndDocumentType(String tenantId, String documentType);
 }

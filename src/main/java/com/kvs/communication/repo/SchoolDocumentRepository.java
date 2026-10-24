@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface SchoolDocumentRepository extends JpaRepository<SchoolDocument, UUID> {
 
-    List<SchoolDocument> findByTenantIdOrderByModifiedOnDescFileNameAsc(UUID tenantId);
+    List<SchoolDocument> findByTenantIdOrderByModifiedOnDescFileNameAsc(String tenantId);
 
-    List<SchoolDocument> findByTenantIdAndFolderIdOrderByModifiedOnDescFileNameAsc(UUID tenantId, UUID folderId);
+    List<SchoolDocument> findByTenantIdAndFolderIdOrderByModifiedOnDescFileNameAsc(String tenantId, UUID folderId);
 }

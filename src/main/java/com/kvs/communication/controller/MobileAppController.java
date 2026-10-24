@@ -49,11 +49,11 @@ public class MobileAppController {
                         .build());
     }
 
-    @GetMapping("/parents/{parentUserId}/children")
+    @GetMapping({"/parent/{parentId}/wards", "/parents/{parentId}/children", "/parents/{parentId}/wards"})
     @PreAuthorize(CommunicationRoles.PARENT_ONLY)
     public ResponseEntity<ApiResponse<List<ChildProfileResponse>>> getLinkedChildren(
-            @PathVariable UUID parentUserId) {
-        List<ChildProfileResponse> data = mobileAppService.getLinkedChildren(parentUserId);
+            @PathVariable String parentId) {
+        List<ChildProfileResponse> data = mobileAppService.getLinkedChildren(parentId);
         return ResponseEntity.ok(ApiResponse.<List<ChildProfileResponse>>builder()
                 .success(true)
                 .message("Linked child profiles retrieved successfully for account switching")
@@ -77,7 +77,7 @@ public class MobileAppController {
     @GetMapping("/preferences")
     @PreAuthorize(CommunicationRoles.PARENT_ONLY)
     public ResponseEntity<ApiResponse<NotificationPreferenceResponse>> getPreferences(
-            @RequestParam UUID tenantId,
+            @RequestParam String tenantId,
             @RequestParam UUID userId) {
         NotificationPreferenceResponse data = mobileAppService.getPreferences(tenantId, userId);
         return ResponseEntity.ok(ApiResponse.<NotificationPreferenceResponse>builder()

@@ -27,7 +27,7 @@ public class StudentGatePass extends BaseAuditEntity {
     private UUID passId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "student_id", nullable = false)
     private UUID studentId;

@@ -12,7 +12,7 @@ import java.util.UUID;
 public class DocumentNotificationResponse {
 
     private UUID notificationId;
-    private UUID tenantId;
+    private String tenantId;
     private String documentType;
     private String documentId;
     private UUID studentId;

@@ -11,9 +11,9 @@ import java.util.UUID;
 @Repository
 public interface SupportTicketRepository extends JpaRepository<SupportTicket, UUID> {
 
-    List<SupportTicket> findByTenantIdOrderByLastActivityAtDesc(UUID tenantId);
+    List<SupportTicket> findByTenantIdOrderByLastActivityAtDesc(String tenantId);
 
-    List<SupportTicket> findByTenantIdAndRequesterUserIdOrderByLastActivityAtDesc(UUID tenantId, String requesterUserId);
+    List<SupportTicket> findByTenantIdAndRequesterUserIdOrderByLastActivityAtDesc(String tenantId, String requesterUserId);
 
     /** Highest number used so far ("SUP-1048" -> 1048); numbers are shared by every school */
     @Query(value = "SELECT COALESCE(MAX(CAST(SUBSTRING(ticket_number FROM 5) AS INTEGER)), 1000) FROM support_tickets", nativeQuery = true)

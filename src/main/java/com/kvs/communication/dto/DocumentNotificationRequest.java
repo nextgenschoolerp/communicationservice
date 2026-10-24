@@ -14,7 +14,7 @@ import java.util.UUID;
 public class DocumentNotificationRequest {
 
     @NotNull(message = "Tenant ID is required")
-    private UUID tenantId;
+    private String tenantId;
 
     @NotBlank(message = "Document type is required (e.g., FEE_RECEIPT, REPORT_CARD)")
     @Size(max = 50)

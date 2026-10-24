@@ -13,7 +13,7 @@ import java.util.UUID;
 public class CalendarEventResponse {
 
     private UUID eventId;
-    private UUID tenantId;
+    private String tenantId;
     private String title;
     private String description;
     private String eventType;

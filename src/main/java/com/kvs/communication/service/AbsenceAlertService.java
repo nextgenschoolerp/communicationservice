@@ -28,13 +28,20 @@ public class AbsenceAlertService {
     // US-09001: Dispatch automated alerts within 30 minutes of unexcused student absence
     @Transactional
     public AbsenceAlertResponse dispatchAbsenceAlert(AbsenceAlertRequest request) {
+        String guardianName = request.getGuardianName() != null && !request.getGuardianName().isBlank()
+                ? request.getGuardianName()
+                : "Guardian of " + request.getStudentName();
+        LocalDate absenceDate = request.getAbsenceDate() != null
+                ? request.getAbsenceDate()
+                : LocalDate.now();
+
         StudentAbsenceAlert alert = StudentAbsenceAlert.builder()
                 .tenantId(request.getTenantId())
                 .studentId(request.getStudentId())
                 .studentName(request.getStudentName())
                 .guardianPhone(request.getGuardianPhone())
-                .guardianName(request.getGuardianName())
-                .absenceDate(request.getAbsenceDate())
+                .guardianName(guardianName)
+                .absenceDate(absenceDate)
                 .alertChannel(request.getAlertChannel() != null ? request.getAlertChannel() : "WHATSAPP")
                 .deliveryStatus(DeliveryStatus.SENT)
                 .escalated(false)
@@ -64,9 +71,11 @@ public class AbsenceAlertService {
     }
 
     @Transactional(readOnly = true)
-    public List<AbsenceAlertResponse> getAbsenceAlerts(UUID tenantId, LocalDate date) {
-        LocalDate searchDate = date != null ? date : LocalDate.now();
-        return absenceAlertRepository.findByTenantIdAndAbsenceDate(tenantId, searchDate).stream()
+    public List<AbsenceAlertResponse> getAbsenceAlerts(String tenantId, LocalDate date) {
+        List<StudentAbsenceAlert> alerts = (date != null)
+                ? absenceAlertRepository.findByTenantIdAndAbsenceDate(tenantId, date)
+                : absenceAlertRepository.findByTenantIdOrderByCreatedAtDesc(tenantId);
+        return alerts.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

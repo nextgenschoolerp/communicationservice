@@ -23,7 +23,7 @@ public class DocumentFolder extends BaseAuditEntity {
     private UUID folderId;
 
     @Column(name = "tenant_id", nullable = false)
-    private UUID tenantId;
+    private String tenantId;
 
     @Column(name = "name", nullable = false, length = 150)
     private String name;

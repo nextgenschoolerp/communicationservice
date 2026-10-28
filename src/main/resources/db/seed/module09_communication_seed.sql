@@ -121,6 +121,21 @@ INSERT INTO communication_broadcasts (
      'Compliance archive of previous year mandatory fee regulation notices and parent consent receipts.',
      'ALL_PARENTS', 'EMAIL', 'NORMAL', 'ARCHIVED', false, null, true, 0, 'seed:module09');
 
+-- Notice board circulars shown on the Overview page
+INSERT INTO communication_broadcasts (
+    broadcast_id, tenant_id, sender_user_id, sender_name, title, message_body,
+    target_audience, channel, priority, status, is_pinned, pinned_until, is_archived, version, created_by, created_at, updated_at
+) VALUES
+    ('5eed0009-0001-4000-8000-000000000004', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '5eed0009-0000-4000-8000-000000000001',
+     'School office', 'Half-term break: 26–30 October',
+     'School reopens on Monday, 2 November. Please share with families.',
+     'ALL_STAKEHOLDERS', 'MULTI_CHANNEL', 'NORMAL', 'ACTIVE', false, NULL, false, 0, 'seed:module09', TIMESTAMPTZ '2026-10-23 10:00:00+05:30', TIMESTAMPTZ '2026-10-23 10:00:00+05:30'),
+
+    ('5eed0009-0001-4000-8000-000000000005', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '5eed0001-0001-4000-8000-000000000002',
+     'Principal’s office', 'Safeguarding refresher training',
+     'All staff to complete the online module by Friday, 6 November.',
+     'ALL_TEACHERS', 'MULTI_CHANNEL', 'URGENT', 'ACTIVE', false, NULL, false, 0, 'seed:module09', TIMESTAMPTZ '2026-10-27 09:30:00+05:30', TIMESTAMPTZ '2026-10-27 09:30:00+05:30');
+
 INSERT INTO broadcast_delivery_logs (
     delivery_id, broadcast_id, recipient_phone, recipient_email, recipient_user_id,
     channel, delivery_status, gateway_response_id, fallback_triggered, version, created_by
@@ -261,7 +276,7 @@ INSERT INTO calendar_events (
      'HOLIDAY', CURRENT_DATE + INTERVAL '10 days', CURRENT_DATE + INTERVAL '17 days', NULL, NULL, 'Campus', NULL, 'ALL', true, 0, 'seed:module09'),
 
     ('5eed0009-0008-4000-8000-000000000002', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-     'Year 10 parent–teacher meetings', 'Meet subject teachers to discuss progress, learning goals and support before the mid-term reports are published.',
+     'Class 10 parent–teacher meetings', 'Meet subject teachers to discuss progress, learning goals and support before the mid-term reports are published.',
      'MEETING', DATE '2026-10-19', DATE '2026-10-19', '15:30', '18:00', 'Main hall', 'Michael Brooks', 'GRADE_10', true, 0, 'seed:module09'),
 
     ('5eed0009-0008-4000-8000-000000000003', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -277,12 +292,37 @@ INSERT INTO calendar_events (
      'HOLIDAY', DATE '2026-10-26', DATE '2026-10-30', NULL, NULL, 'Campus', NULL, 'ALL', true, 0, 'seed:module09'),
 
     ('5eed0009-0008-4000-8000-000000000006', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-     'Year 11 mock examinations', 'Mock GCSE papers in the exam hall; timetables are on the parent portal.',
+     'Class 11 half-yearly examinations', 'Half-yearly papers in the exam hall; the date sheet is on the parent portal.',
      'EXAM', DATE '2026-11-16', DATE '2026-11-20', '09:00', '12:30', 'Exam hall', 'James Reid', 'GRADE_11', true, 0, 'seed:module09'),
 
     ('5eed0009-0008-4000-8000-000000000007', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
      'Winter concert', 'Choir, orchestra and drama showcase for families.',
      'CULTURAL', DATE '2026-12-10', DATE '2026-12-10', '18:00', '20:00', 'Main hall', 'Laura Bennett', 'ALL', true, 0, 'seed:module09');
+
+-- Upcoming events shown on the Overview page and the calendar (Indian school calendar)
+INSERT INTO calendar_events (
+    event_id, tenant_id, title, description, event_type, start_date, end_date, start_time, end_time, venue, organiser,
+    target_audience, is_published, version, created_by
+) VALUES
+    ('5eed0009-0008-4000-8000-000000000008', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+     'Classes resume after half-term', 'The regular timetable and class registers resume.',
+     'ACADEMIC', DATE '2026-11-02', DATE '2026-11-02', NULL, NULL, 'Campus', NULL, 'ALL', true, 0, 'seed:module09'),
+
+    ('5eed0009-0008-4000-8000-000000000009', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+     'Class 10 pre-board parent–teacher meeting', 'Meet subject teachers to review pre-board preparation and revision plans.',
+     'MEETING', DATE '2026-11-05', DATE '2026-11-05', '14:30', '17:00', 'Main hall', 'School office', 'GRADE_10', true, 0, 'seed:module09'),
+
+    ('5eed0009-0008-4000-8000-000000000010', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+     'Children’s Day celebrations', 'Cultural programme, games and a special assembly for every class.',
+     'CULTURAL', DATE '2026-11-14', DATE '2026-11-14', '09:30', '12:30', 'Auditorium', 'Priya Nair', 'ALL', true, 0, 'seed:module09'),
+
+    ('5eed0009-0008-4000-8000-000000000011', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+     'Class 12 pre-board examinations', 'Pre-board papers in the exam hall; the date sheet is on the parent portal.',
+     'EXAM', DATE '2026-11-23', DATE '2026-11-27', '09:00', '12:00', 'Exam hall', 'School office', 'GRADE_12', true, 0, 'seed:module09'),
+
+    ('5eed0009-0008-4000-8000-000000000012', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+     'Inter-house football tournament', 'Knock-out matches between Tagore, Raman, Shivaji and Ashoka houses.',
+     'SPORTS', DATE '2026-12-04', DATE '2026-12-04', '08:30', '13:00', 'Sports grounds', 'Vivek Chopra', 'ALL', true, 0, 'seed:module09');
 
 INSERT INTO grievance_tickets (
     ticket_id, tenant_id, parent_user_id, parent_name, student_id, student_name,

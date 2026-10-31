@@ -28,4 +28,6 @@ public class BroadcastResponse {
     private Boolean isArchived;
     private Instant archivedAt;
     private Instant createdAt;
+    /** delivery rows by status: QUEUED, SENT, DELIVERED, READ, FAILED, SKIPPED (only those present) */
+    private java.util.Map<String, Long> delivery;
 }

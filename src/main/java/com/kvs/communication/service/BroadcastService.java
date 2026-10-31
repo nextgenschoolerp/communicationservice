@@ -26,7 +26,29 @@ public class BroadcastService {
 
     private final CommunicationBroadcastRepository broadcastRepository;
     private final BroadcastDeliveryLogRepository deliveryLogRepository;
+    private final ServiceClients clients;
     private final CommunicationAuditService auditService;
+    private final BroadcastDeliveryService deliveryService;
+
+    /** Who a circular would reach and which channels can send now, before it is sent */
+    @Transactional(readOnly = true)
+    public java.util.Map<String, Object> previewAudience(String tenantId, String audience, ChannelType channel) {
+        String bearer = ServiceClients.currentBearer();
+        List<BroadcastDeliveryService.Recipient> people = deliveryService.recipients(bearer, tenantId, audience);
+        long staff = people.stream().filter(r -> r.label().startsWith("Staff")).count();
+        java.util.Map<String, Object> out = new java.util.LinkedHashMap<>();
+        out.put("audience", audience);
+        out.put("recipients", people.size());
+        out.put("families", people.size() - staff);
+        out.put("staff", staff);
+        out.put("withPhone", people.stream().filter(r -> r.phone() != null && r.phone().replaceAll("[^0-9]", "").length() >= 10).count());
+        out.put("withEmail", people.stream().filter(r -> r.email() != null).count());
+        out.put("channel", channel);
+        Object readiness;
+        try { readiness = clients.channelReadiness(bearer, tenantId); } catch (Exception e) { readiness = null; }
+        out.put("channels", readiness);
+        return out;
+    }
 
     // US-09000: Broadcast official school circulars simultaneously via WhatsApp, SMS, and App Push
     @Transactional
@@ -48,17 +70,8 @@ public class BroadcastService {
 
         broadcast = broadcastRepository.save(broadcast);
 
-        // Seed initial delivery log entry
-        BroadcastDeliveryLog deliveryLog = BroadcastDeliveryLog.builder()
-                .broadcastId(broadcast.getBroadcastId())
-                .recipientPhone("+919876543210")
-                .recipientEmail("guardian@schoolerp.internal")
-                .channel(request.getChannel())
-                .deliveryStatus(DeliveryStatus.SENT)
-                .gatewayResponseId("GW-" + UUID.randomUUID().toString().substring(0, 8))
-                .fallbackTriggered(false)
-                .build();
-        deliveryLogRepository.save(deliveryLog);
+        // one delivery row per recipient; sent through the school's providers once this transaction commits
+        deliveryService.queue(broadcast, ServiceClients.currentBearer());
 
         auditService.logSuccess("CommunicationBroadcast", "CREATE_BROADCAST",
                 "Created broadcast ID " + broadcast.getBroadcastId() + " targeting " + request.getTargetAudience());
@@ -86,16 +99,7 @@ public class BroadcastService {
 
         alert = broadcastRepository.save(alert);
 
-        BroadcastDeliveryLog logEntry = BroadcastDeliveryLog.builder()
-                .broadcastId(alert.getBroadcastId())
-                .recipientPhone("+919876543210")
-                .recipientEmail("all-parents@schoolerp.internal")
-                .channel(ChannelType.MULTI_CHANNEL)
-                .deliveryStatus(DeliveryStatus.SENT)
-                .gatewayResponseId("EMG-" + UUID.randomUUID().toString().substring(0, 8))
-                .fallbackTriggered(false)
-                .build();
-        deliveryLogRepository.save(logEntry);
+        deliveryService.queue(alert, ServiceClients.currentBearer());
 
         auditService.logSuccess("CommunicationBroadcast", "EMERGENCY_ALERT",
                 "Emergency broadcast triggered ID " + alert.getBroadcastId() + ": " + alert.getTitle());
@@ -225,6 +229,8 @@ public class BroadcastService {
                 .isArchived(broadcast.getIsArchived())
                 .archivedAt(broadcast.getArchivedAt())
                 .createdAt(broadcast.getCreatedAt())
+                .delivery(deliveryLogRepository.countByStatus(broadcast.getBroadcastId()).stream()
+                        .collect(Collectors.toMap(r -> String.valueOf(r[0]), r -> (Long) r[1], (a, b) -> a, java.util.TreeMap::new)))
                 .build();
     }
 
@@ -232,6 +238,7 @@ public class BroadcastService {
         return DeliveryLogResponse.builder()
                 .deliveryId(log.getDeliveryId())
                 .broadcastId(log.getBroadcastId())
+                .recipientName(log.getRecipientName())
                 .recipientPhone(log.getRecipientPhone())
                 .recipientEmail(log.getRecipientEmail())
                 .recipientUserId(log.getRecipientUserId())

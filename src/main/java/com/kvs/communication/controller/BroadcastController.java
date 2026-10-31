@@ -46,6 +46,14 @@ public class BroadcastController {
                 .build());
     }
 
+    /** Who a circular to this audience would reach, and which of the school's channels can send now */
+    @GetMapping("/audience-preview")
+    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> previewAudience(@RequestParam String tenantId, @RequestParam String audience,
+                                                                                @RequestParam(required = false) com.kvs.communication.enums.ChannelType channel) {
+        return ResponseEntity.ok(ApiResponse.success(broadcastService.previewAudience(tenantId, audience, channel)));
+    }
+
     @GetMapping("/{broadcastId}")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<BroadcastResponse>> getBroadcastById(

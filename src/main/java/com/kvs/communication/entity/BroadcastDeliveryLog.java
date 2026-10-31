@@ -27,6 +27,10 @@ public class BroadcastDeliveryLog extends BaseAuditEntity {
     @Column(name = "broadcast_id", nullable = false)
     private UUID broadcastId;
 
+    /** "Rohit Sharma · Father of Aarav Sharma (Class 7)" */
+    @Column(name = "recipient_name", length = 300)
+    private String recipientName;
+
     @Column(name = "recipient_phone", nullable = false, length = 20)
     private String recipientPhone;
 

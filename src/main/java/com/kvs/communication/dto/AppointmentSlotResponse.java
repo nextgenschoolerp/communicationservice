@@ -19,6 +19,6 @@ public class AppointmentSlotResponse {
     private String startTime;
     private String endTime;
     private Boolean isBooked;
-    private UUID bookedByParentId;
+    private String bookedByParentId;
     private String bookedByParentName;
 }

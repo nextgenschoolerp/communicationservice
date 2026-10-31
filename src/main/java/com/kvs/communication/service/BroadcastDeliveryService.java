@@ -58,7 +58,7 @@ public class BroadcastDeliveryService {
     /** ALL_PARENTS, GRADE_<n> (class families), ALL_TEACHERS (all staff), ALL_STAKEHOLDERS (families and staff) */
     public List<Recipient> recipients(String bearer, String tenantId, String audience) {
         String a = audience == null ? "" : audience.trim().toUpperCase(Locale.ROOT);
-        boolean families = a.equals("ALL_PARENTS") || a.equals("ALL_STAKEHOLDERS") || a.startsWith("GRADE_");
+        boolean families = a.equals("ALL_PARENTS") || a.equals("ALL_STAKEHOLDERS") || a.startsWith("GRADE_") || a.contains("PARENT");
         boolean staff = a.equals("ALL_TEACHERS") || a.equals("ALL_STAKEHOLDERS");
         List<Recipient> out = new ArrayList<>();
         try {

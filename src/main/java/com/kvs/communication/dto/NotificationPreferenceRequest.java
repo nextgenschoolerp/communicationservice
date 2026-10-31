@@ -15,7 +15,7 @@ public class NotificationPreferenceRequest {
     private String tenantId;
 
     @NotNull(message = "User ID is required")
-    private UUID userId;
+    private String userId;
 
     private Boolean whatsappEnabled;
     private Boolean smsEnabled;

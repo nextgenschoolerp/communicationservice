@@ -12,7 +12,7 @@ public class NotificationPreferenceResponse {
 
     private UUID preferenceId;
     private String tenantId;
-    private UUID userId;
+    private String userId;
     private Boolean whatsappEnabled;
     private Boolean smsEnabled;
     private Boolean emailEnabled;

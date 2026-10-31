@@ -38,7 +38,7 @@ public class BroadcastDeliveryLog extends BaseAuditEntity {
     private String recipientEmail;
 
     @Column(name = "recipient_user_id")
-    private UUID recipientUserId;
+    private String recipientUserId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "channel", nullable = false, length = 20)

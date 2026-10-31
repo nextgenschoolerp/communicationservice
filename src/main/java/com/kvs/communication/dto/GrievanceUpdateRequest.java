@@ -12,6 +12,6 @@ import java.util.UUID;
 public class GrievanceUpdateRequest {
 
     private TicketStatus status;
-    private UUID assignedToUserId;
+    private String assignedToUserId;
     private String resolutionNotes;
 }

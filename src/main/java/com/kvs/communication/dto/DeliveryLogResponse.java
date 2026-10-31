@@ -17,7 +17,7 @@ public class DeliveryLogResponse {
     private String recipientName;
     private String recipientPhone;
     private String recipientEmail;
-    private UUID recipientUserId;
+    private String recipientUserId;
     private ChannelType channel;
     private DeliveryStatus deliveryStatus;
     private String gatewayResponseId;

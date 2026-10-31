@@ -13,5 +13,5 @@ public interface AppointmentSlotRepository extends JpaRepository<AppointmentSlot
 
     List<AppointmentSlot> findByTenantIdAndSlotDateOrderByStartTimeAsc(String tenantId, LocalDate slotDate);
 
-    List<AppointmentSlot> findByTenantIdAndHostUserId(String tenantId, UUID hostUserId);
+    List<AppointmentSlot> findByTenantIdAndHostUserId(String tenantId, String hostUserId);
 }

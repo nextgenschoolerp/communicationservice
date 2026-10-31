@@ -14,7 +14,7 @@ public class SurveyResponseDto {
     private UUID responseId;
     private String tenantId;
     private UUID surveyId;
-    private UUID parentUserId;
+    private String parentUserId;
     private String parentName;
     private Integer ratingScore;
     private String comments;

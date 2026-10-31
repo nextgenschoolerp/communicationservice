@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface DeviceRegistrationRepository extends JpaRepository<DeviceRegistration, UUID> {
 
-    List<DeviceRegistration> findByUserIdAndIsActiveTrue(UUID userId);
+    List<DeviceRegistration> findByUserIdAndIsActiveTrue(String userId);
 
-    Optional<DeviceRegistration> findByUserIdAndDeviceToken(UUID userId, String deviceToken);
+    Optional<DeviceRegistration> findByUserIdAndDeviceToken(String userId, String deviceToken);
 }

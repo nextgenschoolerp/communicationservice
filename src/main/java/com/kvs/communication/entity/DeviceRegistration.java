@@ -28,7 +28,7 @@ public class DeviceRegistration extends BaseAuditEntity {
     private String tenantId;
 
     @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    private String userId;
 
     @Column(name = "device_token", nullable = false, length = 255)
     private String deviceToken;

@@ -13,7 +13,7 @@ public class AppointmentSlotResponse {
 
     private UUID slotId;
     private String tenantId;
-    private UUID hostUserId;
+    private String hostUserId;
     private String hostName;
     private LocalDate slotDate;
     private String startTime;

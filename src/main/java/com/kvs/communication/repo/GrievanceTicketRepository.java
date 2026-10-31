@@ -13,7 +13,7 @@ public interface GrievanceTicketRepository extends JpaRepository<GrievanceTicket
 
     List<GrievanceTicket> findByTenantIdAndStatus(String tenantId, TicketStatus status);
 
-    List<GrievanceTicket> findByTenantIdAndParentUserIdOrderByCreatedAtDesc(String tenantId, UUID parentUserId);
+    List<GrievanceTicket> findByTenantIdAndParentUserIdOrderByCreatedAtDesc(String tenantId, String parentUserId);
 
     List<GrievanceTicket> findByTenantIdOrderByCreatedAtDesc(String tenantId);
 }

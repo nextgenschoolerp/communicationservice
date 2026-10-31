@@ -13,7 +13,7 @@ public class DeviceRegistrationResponse {
 
     private UUID registrationId;
     private String tenantId;
-    private UUID userId;
+    private String userId;
     private String deviceToken;
     private String platform;
     private String appVersion;

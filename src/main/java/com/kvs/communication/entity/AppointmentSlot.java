@@ -28,7 +28,7 @@ public class AppointmentSlot extends BaseAuditEntity {
     private String tenantId;
 
     @Column(name = "host_user_id", nullable = false)
-    private UUID hostUserId;
+    private String hostUserId;
 
     @Column(name = "host_name", nullable = false, length = 150)
     private String hostName;

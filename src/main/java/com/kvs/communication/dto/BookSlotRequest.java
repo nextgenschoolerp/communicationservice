@@ -14,7 +14,7 @@ import java.util.UUID;
 public class BookSlotRequest {
 
     @NotNull(message = "Parent user ID is required")
-    private UUID parentId;
+    private String parentId;
 
     @NotBlank(message = "Parent name is required")
     @Size(max = 150)

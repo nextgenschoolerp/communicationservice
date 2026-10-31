@@ -15,7 +15,7 @@ public class GrievanceTicketResponse {
 
     private UUID ticketId;
     private String tenantId;
-    private UUID parentUserId;
+    private String parentUserId;
     private String parentName;
     private UUID studentId;
     private String studentName;
@@ -25,7 +25,7 @@ public class GrievanceTicketResponse {
     private String description;
     private TicketStatus status;
     private Integer slaDueHours;
-    private UUID assignedToUserId;
+    private String assignedToUserId;
     private String resolutionNotes;
     private Instant createdAt;
     private Instant resolvedAt;

@@ -78,7 +78,7 @@ public class MobileAppController {
     @PreAuthorize(CommunicationRoles.PARENT_ONLY)
     public ResponseEntity<ApiResponse<NotificationPreferenceResponse>> getPreferences(
             @RequestParam String tenantId,
-            @RequestParam UUID userId) {
+            @RequestParam String userId) {
         NotificationPreferenceResponse data = mobileAppService.getPreferences(tenantId, userId);
         return ResponseEntity.ok(ApiResponse.<NotificationPreferenceResponse>builder()
                 .success(true)

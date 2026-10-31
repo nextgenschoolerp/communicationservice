@@ -49,7 +49,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
 
         DeviceRegistrationRequest req = DeviceRegistrationRequest.builder()
                 .tenantId(tenantId)
-                .userId(parentUserId)
+                .userId(parentUserId.toString())
                 .deviceToken("fcm-device-token-xyz-123456789")
                 .platform("ANDROID")
                 .appVersion("2.4.1")
@@ -108,7 +108,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
 
         NotificationPreferenceRequest req = NotificationPreferenceRequest.builder()
                 .tenantId(tenantId)
-                .userId(parentUserId)
+                .userId(parentUserId.toString())
                 .whatsappEnabled(true)
                 .smsEnabled(false)
                 .emailEnabled(true)

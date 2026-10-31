@@ -30,7 +30,7 @@ public class GrievanceTicket extends BaseAuditEntity {
     private String tenantId;
 
     @Column(name = "parent_user_id", nullable = false)
-    private UUID parentUserId;
+    private String parentUserId;
 
     @Column(name = "parent_name", nullable = false, length = 150)
     private String parentName;
@@ -65,7 +65,7 @@ public class GrievanceTicket extends BaseAuditEntity {
     private Integer slaDueHours = 48;
 
     @Column(name = "assigned_to_user_id")
-    private UUID assignedToUserId;
+    private String assignedToUserId;
 
     @Column(name = "resolution_notes", columnDefinition = "TEXT")
     private String resolutionNotes;

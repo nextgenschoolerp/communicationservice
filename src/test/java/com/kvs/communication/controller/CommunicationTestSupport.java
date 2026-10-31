@@ -2,7 +2,12 @@ package com.kvs.communication.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kvs.communication.service.ServiceClients;
 import com.kvs.core.service.JwtTokenService;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +32,7 @@ public abstract class CommunicationTestSupport {
     @Autowired protected MockMvc mockMvc;
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected JwtTokenService jwtTokenService;
+    @MockBean protected ServiceClients serviceClients;
 
     protected final String run = UUID.randomUUID().toString().substring(0, 8);
     protected final String tenantId = "T-COMM-" + run;
@@ -34,6 +40,40 @@ public abstract class CommunicationTestSupport {
     protected final UUID parentUserId = UUID.randomUUID();
     protected final UUID teacherUserId = UUID.randomUUID();
     protected final UUID studentId = UUID.randomUUID();
+
+    @BeforeEach
+    void setUpMockClients() throws Exception {
+        JsonNode mockGuardians = objectMapper.readTree("""
+            [
+              {
+                "studentId": "%s",
+                "studentName": "Aarav Sharma",
+                "className": "Class 10",
+                "name": "Rajesh Sharma",
+                "phone": "+919876543210",
+                "email": "rajesh.sharma@example.com",
+                "relationship": "Father"
+              }
+            ]
+            """.formatted(studentId));
+        JsonNode mockStaff = objectMapper.readTree("""
+            [
+              {
+                "name": "Dr. Kavya Nair",
+                "designation": "Mathematics Teacher",
+                "phone": "+919876543211",
+                "email": "kavya.nair@example.com"
+              }
+            ]
+            """);
+        JsonNode mockReadiness = objectMapper.readTree("{\"whatsapp\": true, \"sms\": true, \"email\": true}");
+        JsonNode mockDeliver = objectMapper.readTree("{\"channel\": \"WHATSAPP\", \"results\": []}");
+
+        when(serviceClients.guardianContacts(any(), any(), any())).thenReturn(mockGuardians);
+        when(serviceClients.staffContacts(any(), any())).thenReturn(mockStaff);
+        when(serviceClients.channelReadiness(any(), any())).thenReturn(mockReadiness);
+        when(serviceClients.deliver(any(), any(), any())).thenReturn(mockDeliver);
+    }
 
     protected String token(String role) {
         return token(role, role.toLowerCase(Locale.ROOT) + "-" + run);

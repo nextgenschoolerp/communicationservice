@@ -130,7 +130,7 @@ public class MobileAppService {
     }
 
     @Transactional(readOnly = true)
-    public NotificationPreferenceResponse getPreferences(String tenantId, UUID userId) {
+    public NotificationPreferenceResponse getPreferences(String tenantId, String userId) {
         NotificationPreference preference = notificationPreferenceRepository
                 .findByTenantIdAndUserId(tenantId, userId)
                 .orElseGet(() -> NotificationPreference.builder()

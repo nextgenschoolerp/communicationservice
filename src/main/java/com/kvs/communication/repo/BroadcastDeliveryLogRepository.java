@@ -13,5 +13,8 @@ public interface BroadcastDeliveryLogRepository extends JpaRepository<BroadcastD
 
     List<BroadcastDeliveryLog> findByBroadcastId(UUID broadcastId);
 
+    @org.springframework.data.jpa.repository.Query("select l.deliveryStatus, count(l) from BroadcastDeliveryLog l where l.broadcastId = :id group by l.deliveryStatus")
+    List<Object[]> countByStatus(@org.springframework.data.repository.query.Param("id") UUID broadcastId);
+
     List<BroadcastDeliveryLog> findByBroadcastIdAndDeliveryStatus(UUID broadcastId, DeliveryStatus status);
 }

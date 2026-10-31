@@ -12,5 +12,5 @@ public interface SurveyResponseRepository extends JpaRepository<SurveyResponse, 
 
     List<SurveyResponse> findBySurveyId(UUID surveyId);
 
-    List<SurveyResponse> findByTenantIdAndParentUserId(String tenantId, UUID parentUserId);
+    List<SurveyResponse> findByTenantIdAndParentUserId(String tenantId, String parentUserId);
 }

@@ -101,7 +101,7 @@ class GatePassAndVisitorIntegrationTest extends CommunicationTestSupport {
 
         AppointmentSlotRequest slotReq = AppointmentSlotRequest.builder()
                 .tenantId(tenantId)
-                .hostUserId(UUID.randomUUID())
+                .hostUserId(UUID.randomUUID().toString())
                 .hostName("Principal Dr. Sunita Rao")
                 .slotDate(LocalDate.now().plusDays(2))
                 .startTime("10:00")
@@ -114,7 +114,7 @@ class GatePassAndVisitorIntegrationTest extends CommunicationTestSupport {
 
         // Book slot by parent
         BookSlotRequest bookReq = BookSlotRequest.builder()
-                .parentId(parentUserId)
+                .parentId(parentUserId.toString())
                 .parentName("Rajesh Sharma")
                 .build();
 

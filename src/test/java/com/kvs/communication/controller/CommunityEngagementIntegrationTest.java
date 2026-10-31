@@ -102,7 +102,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
 
         GrievanceTicketRequest req = GrievanceTicketRequest.builder()
                 .tenantId(tenantId)
-                .parentUserId(parentUserId)
+                .parentUserId(parentUserId.toString())
                 .parentName("Rajesh Sharma")
                 .studentId(studentId)
                 .studentName("Aarav Sharma")
@@ -121,7 +121,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
         // Update ticket to resolved
         GrievanceUpdateRequest updateReq = GrievanceUpdateRequest.builder()
                 .status(TicketStatus.RESOLVED)
-                .assignedToUserId(UUID.randomUUID())
+                .assignedToUserId(UUID.randomUUID().toString())
                 .resolutionNotes("Transport coordinator instructed driver to start 15 minutes earlier.")
                 .build();
 
@@ -176,7 +176,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
         SurveySubmissionRequest responseReq = SurveySubmissionRequest.builder()
                 .tenantId(tenantId)
                 .surveyId(surveyId)
-                .parentUserId(parentUserId)
+                .parentUserId(parentUserId.toString())
                 .parentName("Rajesh Sharma")
                 .ratingScore(5)
                 .comments("Excellently organised! The robotics demo by Grade 10 was inspiring.")

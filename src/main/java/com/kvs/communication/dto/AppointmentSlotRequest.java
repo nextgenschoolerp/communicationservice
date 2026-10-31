@@ -18,7 +18,7 @@ public class AppointmentSlotRequest {
     private String tenantId;
 
     @NotNull(message = "Host user ID is required")
-    private UUID hostUserId;
+    private String hostUserId;
 
     @NotBlank(message = "Host name is required")
     @Size(max = 150)

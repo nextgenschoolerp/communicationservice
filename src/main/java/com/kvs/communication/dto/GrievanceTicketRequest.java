@@ -18,7 +18,7 @@ public class GrievanceTicketRequest {
     private String tenantId;
 
     @NotNull(message = "Parent user ID is required")
-    private UUID parentUserId;
+    private String parentUserId;
 
     @NotBlank(message = "Parent name is required")
     @Size(max = 150)

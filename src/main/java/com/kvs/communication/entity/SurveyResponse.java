@@ -30,7 +30,7 @@ public class SurveyResponse extends BaseAuditEntity {
     private UUID surveyId;
 
     @Column(name = "parent_user_id", nullable = false)
-    private UUID parentUserId;
+    private String parentUserId;
 
     @Column(name = "parent_name", nullable = false, length = 150)
     private String parentName;

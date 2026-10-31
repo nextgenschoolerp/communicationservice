@@ -17,7 +17,7 @@ public class DeviceRegistrationRequest {
     private String tenantId;
 
     @NotNull(message = "User ID is required")
-    private UUID userId;
+    private String userId;
 
     @NotBlank(message = "Device token is required")
     @Size(max = 255)

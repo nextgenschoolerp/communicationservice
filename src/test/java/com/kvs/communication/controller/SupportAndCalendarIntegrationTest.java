@@ -51,7 +51,7 @@ class SupportAndCalendarIntegrationTest extends CommunicationTestSupport {
     }
 
     @Test
-    @DisplayName("Settings → Notifications: a staff member's alert switches default on and are saved per user")
+    @DisplayName("Settings → General → Notifications: a staff member's alert switches default on and are saved per user")
     void testStaffAlertPreferences() throws Exception {
         String userId = "u1111111-1111-1111-1111-111111111111";
         String admin = token("SUPER_ADMIN", userId);

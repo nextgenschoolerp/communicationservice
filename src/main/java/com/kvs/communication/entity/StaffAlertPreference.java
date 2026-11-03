@@ -6,7 +6,7 @@ import lombok.*;
 
 import java.util.UUID;
 
-/** Which school alerts a staff member receives (Settings → Notifications). */
+/** Which school alerts a staff member receives (Settings → General → Notifications). */
 @Entity
 @Table(name = "staff_alert_preferences", uniqueConstraints = {
         @UniqueConstraint(name = "uk_staff_alert_pref_user", columnNames = {"tenant_id", "user_id"})

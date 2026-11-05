@@ -39,6 +39,10 @@ public final class CommunicationRoles {
     /** School document library: folders, uploads and who can view a file */
     public static final String DOCUMENT_MANAGE = "hasAnyRole('PUBLIC_RELATIONS_OFFICER', 'COMMUNICATION_OFFICER', 'PRINCIPAL', 'SCHOOL_PRINCIPAL', 'ADMIN_CLERK', 'SUPER_ADMIN', 'ADMIN')";
 
+    /** Leadership & governance roles that manage school-wide settings (notifications, etc.) */
+    public static final String LEADERSHIP_SETTINGS = "hasAnyRole('SUPER_ADMIN', 'TRUSTEE', 'PRINCIPAL', 'SCHOOL_PRINCIPAL', 'VICE_PRINCIPAL')"
+            + " or hasAnyAuthority('ROLE_SUPER_ADMIN', 'ROLE_TRUSTEE', 'ROLE_PRINCIPAL', 'ROLE_SCHOOL_PRINCIPAL', 'ROLE_VICE_PRINCIPAL')";
+
     /** Any authenticated user in communication */
     public static final String ANY_AUTHENTICATED = "isAuthenticated()";
 }

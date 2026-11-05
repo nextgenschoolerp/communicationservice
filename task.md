@@ -58,7 +58,7 @@ Execution of the `BRD_API_Generate` skill for **Module 09** based on [`story/mod
 - [x] Step 7: Postman Collection (`postman/School_ERP_CommunicationService.postman_collection.json`)
 - [x] Step 8: API Wiki Documentation (`wiki/api-docs/School_ERP_Module_09_Communication_API_Documentation.md`)
 - [x] Step 9: Re-runnable Seed Data (`src/main/resources/db/seed/module09_communication_seed.sql`)
-- [x] Step 10: UI Wiring & Reverse Proxy (`frontend/src/api/communicationService.js`, `frontend/src/components/CommunicationsLive.jsx`, `frontend/src/pages/Admin.jsx`, `frontend/docs/communicationservice-api-mapping.md`)
+- [x] Step 10: UI Wiring & Reverse Proxy (`school_webapp/src/api/communicationService.js`, `school_webapp/src/components/CommunicationsLive.jsx`, `school_webapp/src/pages/Admin.jsx`, `school_webapp/docs/communicationservice-api-mapping.md`)
 
 ---
 
@@ -82,8 +82,8 @@ Execution of the `BRD_API_Generate` skill for **Module 09** based on [`story/mod
   - Confluence-ready API Wiki in `wiki/api-docs/School_ERP_Module_09_Communication_API_Documentation.md`
   - Re-runnable Seed SQL in `src/main/resources/db/seed/module09_communication_seed.sql`
   - Master SQL schema and data dictionary in `story/module9/module9.sql` and `story/module9/module9.md`
-  - Frontend API client in `frontend/src/api/communicationService.js`
-  - Frontend interactive workspace in `frontend/src/components/CommunicationsLive.jsx`
-  - Integrated into `frontend/src/pages/Admin.jsx` (`Communications` and `Calendar`)
-  - Complete UI to API mapping documentation in `frontend/docs/communicationservice-api-mapping.md`
-  - Configured Vite proxy in `frontend/vite.config.js` and Nginx in `deploy/nginx.conf`
+  - Frontend API client in `school_webapp/src/api/communicationService.js`
+  - Frontend interactive workspace in `school_webapp/src/components/CommunicationsLive.jsx`
+  - Integrated into `school_webapp/src/pages/Admin.jsx` (`Communications` and `Calendar`)
+  - Complete UI to API mapping documentation in `school_webapp/docs/communicationservice-api-mapping.md`
+  - Configured Vite proxy in `school_webapp/vite.config.js` and Nginx in `deploy/nginx.conf`

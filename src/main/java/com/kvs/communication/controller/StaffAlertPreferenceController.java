@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-/** Settings → Notifications: the school alerts each staff member receives. */
+/** Settings → General → Notifications: the school alerts each staff member receives. */
 @RestController
 @RequestMapping("/api/v1/communication/staff-alerts/preferences")
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class StaffAlertPreferenceController {
     }
 
     @PutMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationRoles.LEADERSHIP_SETTINGS)
     @Transactional
     public ResponseEntity<ApiResponse<StaffAlertPreferenceDto>> save(@Valid @RequestBody StaffAlertPreferenceDto request) {
         StaffAlertPreference p = repository.findByTenantIdAndUserId(request.getTenantId(), request.getUserId())

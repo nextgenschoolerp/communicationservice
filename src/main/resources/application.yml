@@ -59,6 +59,14 @@ logging:
 
 communication:
   time-zone: ${COMMUNICATION_TIME_ZONE:Asia/Kolkata}
+  # Help & support -> Contact support card (GET /api/v1/communication/support/contact)
+  support:
+    email: ${SUPPORT_EMAIL:helpdesk@yourschool.in}
+    phone: ${SUPPORT_PHONE:+91 11 4000 1234}
+    open-days: ${SUPPORT_OPEN_DAYS:MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY}
+    opens-at: ${SUPPORT_OPENS_AT:08:00}
+    closes-at: ${SUPPORT_CLOSES_AT:17:00}
+    response-time: ${SUPPORT_RESPONSE_TIME:Usually within 2 hours}
   # circular delivery: called with the sender's own token (ServiceClients)
   services:
     auth-url: ${AUTH_SERVICE_URL:http://localhost:8082/authservice}

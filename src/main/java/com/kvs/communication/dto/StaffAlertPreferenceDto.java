@@ -7,7 +7,7 @@ import lombok.*;
 
 import java.util.UUID;
 
-/** Settings → Notifications: request and response (a null switch is left as it is). */
+/** Settings → General → Notifications: request and response (a null switch is left as it is). */
 @Data
 @Builder
 @NoArgsConstructor

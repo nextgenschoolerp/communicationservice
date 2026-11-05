@@ -27,7 +27,7 @@
 --   US-09018: Pinned urgent announcements on parent mobile app feeds
 --   US-09019: Statutory regulatory compliance archival of past broadcasts
 --   Documents page: school document library folders, files, permissions and access history
---   Calendar page: events with times and organisers; Help & support tickets; Settings → Notifications switches
+--   Calendar page: events with times and organisers; Help & support tickets; Settings → General → Notifications switches
 --
 -- Re-runnable: every seed row has created_by = 'seed:module09' and UUIDs starting with 5eed0009-.
 -- =====================================================================================================
@@ -423,7 +423,7 @@ INSERT INTO document_access_logs (log_id, tenant_id, document_id, actor_name, ac
     ('5eed0009-0012-4000-8000-000000000007', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', '5eed0009-0011-4000-8000-000000000007', 'Sarah Williams', 'Uploaded version 1.4', TIMESTAMP WITH TIME ZONE '2026-10-10 11:00:00+05:30', 0, 'seed:module09');
 
 -- ---------------------------------------------------------------------------------------------------
--- 11. Help & support tickets with their conversations, and Settings → Notifications switches
+-- 11. Help & support tickets with their conversations, and Settings → General → Notifications switches
 --     (requester / user: admin_rajesh, a1111111-1111-4111-8111-111111111111)
 -- ---------------------------------------------------------------------------------------------------
 INSERT INTO support_tickets (

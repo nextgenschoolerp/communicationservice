@@ -1,5 +1,6 @@
 package com.kvs.communication.service;
 
+import com.kvs.core.tenancy.TenantContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kvs.communication.entity.BroadcastDeliveryLog;
 import com.kvs.communication.entity.CommunicationBroadcast;
@@ -127,10 +128,11 @@ public class BroadcastDeliveryService {
         }
         logs.saveAll(rows);
         UUID id = b.getBroadcastId();
-        Runnable send = () -> pool.submit(() -> {
+        // the pool thread has no request: run the delivery for the circular's school, so it reads and writes that school's schema
+        Runnable send = () -> pool.submit(() -> TenantContext.runAs(b.getTenantId(), () -> {
             try { send(id, b.getTenantId(), b.getTitle(), b.getMessageBody(), bearer); }
             catch (Exception e) { log.error("Delivery of circular {} stopped: {}", id, e.getMessage(), e); }
-        });
+        }));
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override public void afterCommit() { send.run(); }

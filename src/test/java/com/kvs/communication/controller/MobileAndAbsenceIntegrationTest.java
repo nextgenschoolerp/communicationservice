@@ -63,7 +63,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09003: Multi-child profile switching under single parent credentials")
     void testMultiChildProfileSwitching() throws Exception {
-        String parentToken = token("PARENT");
+        String parentToken = token("PARENT", parentUserId.toString());
 
         // Map child 1
         ParentChildMappingRequest child1 = ParentChildMappingRequest.builder()

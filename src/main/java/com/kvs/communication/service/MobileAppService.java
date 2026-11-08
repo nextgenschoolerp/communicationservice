@@ -27,6 +27,7 @@ public class MobileAppService {
     private final ParentStudentMappingRepository parentStudentMappingRepository;
     private final NotificationPreferenceRepository notificationPreferenceRepository;
     private final CommunicationAuditService auditService;
+    private final ParentAccessGuard parentAccessGuard;
 
     // US-09002: Register device push token for real-time mobile app updates
     @Transactional
@@ -89,7 +90,9 @@ public class MobileAppService {
 
     @Transactional(readOnly = true)
     public List<ChildProfileResponse> getLinkedChildren(String parentUserId) {
-        return parentStudentMappingRepository.findByParentUserId(parentUserId).stream()
+        List<ParentStudentMapping> mappings = parentStudentMappingRepository.findByParentUserId(parentUserId);
+        parentAccessGuard.requireOwnTenant(mappings.stream().map(ParentStudentMapping::getTenantId).toList());
+        return mappings.stream()
                 .map(this::mapToChildProfile)
                 .collect(Collectors.toList());
     }

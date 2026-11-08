@@ -4,6 +4,7 @@ import com.kvs.core.dto.ApiResponse;
 import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.MobileAppService;
+import com.kvs.communication.service.ParentAccessGuard;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class MobileAppController {
 
     private final MobileAppService mobileAppService;
+    private final ParentAccessGuard parentAccessGuard;
 
     // US-09002: Register mobile app push notification device tokens
     @PostMapping("/devices")
@@ -53,6 +55,7 @@ public class MobileAppController {
     @PreAuthorize(CommunicationRoles.PARENT_ONLY)
     public ResponseEntity<ApiResponse<List<ChildProfileResponse>>> getLinkedChildren(
             @PathVariable String parentId) {
+        parentAccessGuard.requireSelfOrStaff(parentId);
         List<ChildProfileResponse> data = mobileAppService.getLinkedChildren(parentId);
         return ResponseEntity.ok(ApiResponse.<List<ChildProfileResponse>>builder()
                 .success(true)

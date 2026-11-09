@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.VisitorService;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class VisitorController {
 
     // US-09007: Register visitor appointments and issue digital visitor passes at reception
     @PostMapping({"", "/register", "/appointments"})
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_MANAGE)
     public ResponseEntity<ApiResponse<VisitorAppointmentResponse>> registerVisitor(
             @Valid @RequestBody VisitorAppointmentRequest request) {
         VisitorAppointmentResponse data = visitorService.registerVisitor(request);
@@ -37,7 +37,7 @@ public class VisitorController {
     }
 
     @PutMapping("/appointments/{appointmentId}/check-in")
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_MANAGE)
     public ResponseEntity<ApiResponse<VisitorAppointmentResponse>> checkInVisitor(
             @PathVariable UUID appointmentId,
             @Valid @RequestBody VisitorCheckInRequest request) {
@@ -50,7 +50,7 @@ public class VisitorController {
     }
 
     @PutMapping("/appointments/{appointmentId}/check-out")
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_MANAGE)
     public ResponseEntity<ApiResponse<VisitorAppointmentResponse>> checkOutVisitor(
             @PathVariable UUID appointmentId) {
         VisitorAppointmentResponse data = visitorService.checkOutVisitor(appointmentId);
@@ -62,7 +62,7 @@ public class VisitorController {
     }
 
     @GetMapping({"", "/appointments"})
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_VIEW)
     public ResponseEntity<ApiResponse<List<VisitorAppointmentResponse>>> listAppointments(
             @RequestParam String tenantId) {
         List<VisitorAppointmentResponse> data = visitorService.listAppointments(tenantId);
@@ -75,7 +75,7 @@ public class VisitorController {
 
     // US-09016: Manage appointment booking slots for principal/leadership meetings
     @PostMapping("/slots")
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_MANAGE)
     public ResponseEntity<ApiResponse<AppointmentSlotResponse>> createSlot(
             @Valid @RequestBody AppointmentSlotRequest request) {
         AppointmentSlotResponse data = visitorService.createSlot(request);
@@ -88,7 +88,7 @@ public class VisitorController {
     }
 
     @PostMapping("/slots/{slotId}/book")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<AppointmentSlotResponse>> bookSlot(
             @PathVariable UUID slotId,
             @Valid @RequestBody BookSlotRequest request) {
@@ -101,7 +101,7 @@ public class VisitorController {
     }
 
     @GetMapping("/slots")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<AppointmentSlotResponse>>> getAvailableSlots(
             @RequestParam String tenantId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.SupportTicketService;
 import jakarta.validation.Valid;
@@ -23,27 +23,27 @@ public class SupportTicketController {
     private final SupportTicketService supportService;
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<SupportTicketResponse>>> list(@RequestParam("tenantId") String tenantId,
                                                                          @RequestParam(name = "requesterUserId", required = false) String requesterUserId) {
         return ok("Support tickets retrieved successfully", supportService.list(tenantId, requesterUserId));
     }
 
     @PostMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<SupportTicketResponse>> create(@Valid @RequestBody SupportTicketRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<SupportTicketResponse>builder()
                 .success(true).message("Support ticket created").data(supportService.create(request)).build());
     }
 
     @GetMapping("/{ticketId}")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<SupportTicketResponse>> get(@PathVariable("ticketId") UUID ticketId) {
         return ok("Support ticket retrieved successfully", supportService.get(ticketId));
     }
 
     @PostMapping("/{ticketId}/messages")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<SupportTicketResponse>> reply(@PathVariable("ticketId") UUID ticketId,
                                                                     @Valid @RequestBody SupportMessageRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<SupportTicketResponse>builder()
@@ -51,7 +51,7 @@ public class SupportTicketController {
     }
 
     @PutMapping("/{ticketId}/status")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<SupportTicketResponse>> changeStatus(@PathVariable("ticketId") UUID ticketId,
                                                                            @Valid @RequestBody SupportStatusRequest request) {
         return ok("Ticket status updated", supportService.changeStatus(ticketId, request));

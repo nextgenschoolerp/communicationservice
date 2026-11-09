@@ -1,0 +1,840 @@
+{
+ "service": "communication",
+ "capturedAt": "2026-11-08",
+ "source": "GET access-rules via dev app (SUPER_ADMIN session)",
+ "rules": [
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/absence-alerts",
+   "roles": [
+    "ADMIN",
+    "ATTENDANCE_OFFICER",
+    "CLASS_TEACHER",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "SYSTEM_AUTOMATION",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/absence-alerts",
+   "roles": [
+    "ADMIN",
+    "ATTENDANCE_OFFICER",
+    "CLASS_TEACHER",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "SYSTEM_AUTOMATION",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/absence-alerts/{alertId}/escalate",
+   "roles": [
+    "ADMIN",
+    "ATTENDANCE_OFFICER",
+    "CLASS_TEACHER",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "SYSTEM_AUTOMATION",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/absence-alerts/trigger",
+   "roles": [
+    "ADMIN",
+    "ATTENDANCE_OFFICER",
+    "CLASS_TEACHER",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "SYSTEM_AUTOMATION",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/access-rules",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/broadcasts",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/broadcasts",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/broadcasts/{broadcastId}",
+   "roles": []
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/broadcasts/{broadcastId}/archive",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/broadcasts/{broadcastId}/delivery-logs",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/broadcasts/{broadcastId}/pin",
+   "roles": [
+    "ADMIN",
+    "PRINCIPAL",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/broadcasts/archived",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/broadcasts/audience-preview",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/broadcasts/delivery/{deliveryId}",
+   "roles": [
+    "ADMIN",
+    "ATTENDANCE_OFFICER",
+    "SUPER_ADMIN",
+    "SYSTEM_AUTOMATION"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/broadcasts/emergency",
+   "roles": [
+    "ADMIN",
+    "PRINCIPAL",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/broadcasts/pinned",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/community/bulletins",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/community/bulletins",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/community/calendar-events",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/community/calendar-events",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/community/calendar-events/{eventId}",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/community/documents/notifications",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/community/documents/notifications",
+   "roles": [
+    "ACCOUNTANT",
+    "ADMIN",
+    "PAYROLL_ACCOUNTANT",
+    "SUPER_ADMIN",
+    "SYSTEM_AUTOMATION"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/community/grievances",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/community/grievances",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/community/grievances/{ticketId}",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/community/surveys",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/community/surveys/{surveyId}/responses",
+   "roles": [
+    "ADMIN",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/community/surveys/responses",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/documents",
+   "roles": []
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/documents/{documentId}/access",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/documents/{documentId}/access-log",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/documents/{documentId}/access-log",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/documents/{documentId}/content",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/documents/folders",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/documents/folders",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/documents/folders/{folderId}",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/documents/folders/{folderId}/files",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "COMMUNICATION_OFFICER",
+    "PRINCIPAL",
+    "PUBLIC_RELATIONS_OFFICER",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/gate-passes",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/gate-passes",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "RECEPTIONIST",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/gate-passes/audit-logs",
+   "roles": [
+    "ADMIN",
+    "SECURITY_GUARD",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/gate-passes/audit-logs",
+   "roles": [
+    "ADMIN",
+    "SECURITY_GUARD",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/gate-passes/verify",
+   "roles": [
+    "ADMIN",
+    "SECURITY_GUARD",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messages",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/messages",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/messages/{messageId}/read",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messages/conversations",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messages/inbox/{recipientId}",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/messages/send",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messages/threads/{threadId}",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messaging",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/messaging",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/messaging/{messageId}/read",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messaging/conversations",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messaging/inbox/{recipientId}",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/messaging/send",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/messaging/threads/{threadId}",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "CLASS_TEACHER",
+    "PARENT",
+    "SUBJECT_TEACHER",
+    "SUPER_ADMIN",
+    "TEACHER"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/mobile/child-mappings",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/mobile/devices",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/mobile/parent/{parentId}/wards",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/mobile/parents/{parentId}/children",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/mobile/parents/{parentId}/wards",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/mobile/preferences",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/mobile/preferences",
+   "roles": [
+    "ADMIN",
+    "APPLICANT_PARENT",
+    "PARENT",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/staff-alerts/preferences",
+   "roles": []
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/staff-alerts/preferences",
+   "roles": [
+    "PRINCIPAL",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN",
+    "TRUSTEE",
+    "VICE_PRINCIPAL"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/support/contact",
+   "roles": []
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/support/contact",
+   "roles": [
+    "PRINCIPAL",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN",
+    "TRUSTEE",
+    "VICE_PRINCIPAL"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/support/tickets",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/support/tickets",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/support/tickets/{ticketId}",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/support/tickets/{ticketId}/messages",
+   "roles": []
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/support/tickets/{ticketId}/status",
+   "roles": []
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/visitors",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/visitors",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/visitors/appointments",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/visitors/appointments",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/visitors/appointments/{appointmentId}/check-in",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/api/v1/communication/visitors/appointments/{appointmentId}/check-out",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/visitors/register",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/api/v1/communication/visitors/slots",
+   "roles": []
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/visitors/slots",
+   "roles": [
+    "ADMIN",
+    "ADMIN_CLERK",
+    "FRONT_OFFICE_COUNSELOR",
+    "PRINCIPAL",
+    "RECEPTIONIST",
+    "SCHOOL_PRINCIPAL",
+    "SUPER_ADMIN"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/api/v1/communication/visitors/slots/{slotId}/book",
+   "roles": []
+  }
+ ]
+}

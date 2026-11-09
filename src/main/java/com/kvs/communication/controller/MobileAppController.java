@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.MobileAppService;
 import com.kvs.communication.service.ParentAccessGuard;
@@ -25,7 +25,7 @@ public class MobileAppController {
 
     // US-09002: Register mobile app push notification device tokens
     @PostMapping("/devices")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<DeviceRegistrationResponse>> registerDevice(
             @Valid @RequestBody DeviceRegistrationRequest request) {
         DeviceRegistrationResponse data = mobileAppService.registerDeviceToken(request);
@@ -39,7 +39,7 @@ public class MobileAppController {
 
     // US-09003: Multi-child profile switching under single parent credentials
     @PostMapping("/child-mappings")
-    @PreAuthorize(CommunicationRoles.PARENT_ONLY)
+    @PreAuthorize(CommunicationPerms.MOBILE_MANAGE)
     public ResponseEntity<ApiResponse<ChildProfileResponse>> mapParentChild(
             @Valid @RequestBody ParentChildMappingRequest request) {
         ChildProfileResponse data = mobileAppService.mapParentStudent(request);
@@ -52,7 +52,7 @@ public class MobileAppController {
     }
 
     @GetMapping({"/parent/{parentId}/wards", "/parents/{parentId}/children", "/parents/{parentId}/wards"})
-    @PreAuthorize(CommunicationRoles.PARENT_ONLY)
+    @PreAuthorize(CommunicationPerms.MOBILE_VIEW)
     public ResponseEntity<ApiResponse<List<ChildProfileResponse>>> getLinkedChildren(
             @PathVariable String parentId) {
         parentAccessGuard.requireSelfOrStaff(parentId);
@@ -66,7 +66,7 @@ public class MobileAppController {
 
     // US-09012: Configure notification preferences for parents
     @PostMapping("/preferences")
-    @PreAuthorize(CommunicationRoles.PARENT_ONLY)
+    @PreAuthorize(CommunicationPerms.MOBILE_MANAGE)
     public ResponseEntity<ApiResponse<NotificationPreferenceResponse>> configurePreferences(
             @Valid @RequestBody NotificationPreferenceRequest request) {
         NotificationPreferenceResponse data = mobileAppService.configurePreferences(request);
@@ -78,7 +78,7 @@ public class MobileAppController {
     }
 
     @GetMapping("/preferences")
-    @PreAuthorize(CommunicationRoles.PARENT_ONLY)
+    @PreAuthorize(CommunicationPerms.MOBILE_VIEW)
     public ResponseEntity<ApiResponse<NotificationPreferenceResponse>> getPreferences(
             @RequestParam String tenantId,
             @RequestParam String userId) {

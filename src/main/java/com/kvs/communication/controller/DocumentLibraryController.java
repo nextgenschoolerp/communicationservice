@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.entity.SchoolDocument;
 import com.kvs.communication.service.DocumentLibraryService;
@@ -29,13 +29,13 @@ public class DocumentLibraryController {
     private final DocumentLibraryService documentService;
 
     @GetMapping("/folders")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<DocumentFolderResponse>>> listFolders(@RequestParam("tenantId") String tenantId) {
         return ok("Document folders retrieved successfully", documentService.listFolders(tenantId));
     }
 
     @PostMapping("/folders")
-    @PreAuthorize(CommunicationRoles.DOCUMENT_MANAGE)
+    @PreAuthorize(CommunicationPerms.DOCUMENTS_MANAGE)
     public ResponseEntity<ApiResponse<DocumentFolderResponse>> createFolder(@Valid @RequestBody DocumentFolderRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<DocumentFolderResponse>builder().success(true)
@@ -43,21 +43,21 @@ public class DocumentLibraryController {
     }
 
     @PutMapping("/folders/{folderId}")
-    @PreAuthorize(CommunicationRoles.DOCUMENT_MANAGE)
+    @PreAuthorize(CommunicationPerms.DOCUMENTS_MANAGE)
     public ResponseEntity<ApiResponse<DocumentFolderResponse>> updateFolder(@PathVariable("folderId") UUID folderId,
                                                                            @Valid @RequestBody DocumentFolderRequest request) {
         return ok("Folder settings saved", documentService.updateFolder(folderId, request));
     }
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<SchoolDocumentResponse>>> listDocuments(@RequestParam("tenantId") String tenantId,
                                                                                   @RequestParam(name = "folderId", required = false) UUID folderId) {
         return ok("Documents retrieved successfully", documentService.listDocuments(tenantId, folderId));
     }
 
     @PostMapping(value = "/folders/{folderId}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize(CommunicationRoles.DOCUMENT_MANAGE)
+    @PreAuthorize(CommunicationPerms.DOCUMENTS_MANAGE)
     public ResponseEntity<ApiResponse<SchoolDocumentResponse>> upload(@PathVariable("folderId") UUID folderId,
                                                                       @RequestParam("file") MultipartFile file,
                                                                       @RequestParam(name = "ownerUserId", required = false) String ownerUserId,
@@ -68,7 +68,7 @@ public class DocumentLibraryController {
     }
 
     @GetMapping("/{documentId}/content")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<byte[]> download(@PathVariable("documentId") UUID documentId) {
         SchoolDocument doc = documentService.document(documentId);
         byte[] bytes = documentService.content(documentId);
@@ -81,14 +81,14 @@ public class DocumentLibraryController {
     }
 
     @PutMapping("/{documentId}/access")
-    @PreAuthorize(CommunicationRoles.DOCUMENT_MANAGE)
+    @PreAuthorize(CommunicationPerms.DOCUMENTS_MANAGE)
     public ResponseEntity<ApiResponse<SchoolDocumentResponse>> changeAccess(@PathVariable("documentId") UUID documentId,
                                                                             @Valid @RequestBody DocumentAccessRequest request) {
         return ok("Permissions updated", documentService.changeAccess(documentId, request));
     }
 
     @PostMapping("/{documentId}/access-log")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<DocumentActivityResponse>> recordActivity(@PathVariable("documentId") UUID documentId,
                                                                                @Valid @RequestBody DocumentActivityRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -97,7 +97,7 @@ public class DocumentLibraryController {
     }
 
     @GetMapping("/{documentId}/access-log")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<DocumentActivityResponse>>> accessHistory(@PathVariable("documentId") UUID documentId) {
         return ok("Access history retrieved successfully", documentService.accessHistory(documentId));
     }

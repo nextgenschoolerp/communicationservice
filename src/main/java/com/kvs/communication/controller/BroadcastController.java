@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.BroadcastService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class BroadcastController {
 
     // US-09000: Broadcast official school circulars simultaneously via WhatsApp, SMS, and App Push
     @PostMapping
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.COMMUNITY_MANAGE)
     public ResponseEntity<ApiResponse<BroadcastResponse>> createBroadcast(
             @Valid @RequestBody BroadcastRequest request) {
         BroadcastResponse data = broadcastService.createBroadcast(request);
@@ -35,7 +35,7 @@ public class BroadcastController {
     }
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<BroadcastResponse>>> getBroadcasts(
             @RequestParam String tenantId) {
         List<BroadcastResponse> data = broadcastService.getBroadcasts(tenantId);
@@ -48,14 +48,14 @@ public class BroadcastController {
 
     /** Who a circular to this audience would reach, and which of the school's channels can send now */
     @GetMapping("/audience-preview")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_VIEW)
     public ResponseEntity<ApiResponse<java.util.Map<String, Object>>> previewAudience(@RequestParam String tenantId, @RequestParam String audience,
                                                                                 @RequestParam(required = false) com.kvs.communication.enums.ChannelType channel) {
         return ResponseEntity.ok(ApiResponse.success(broadcastService.previewAudience(tenantId, audience, channel)));
     }
 
     @GetMapping("/{broadcastId}")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<BroadcastResponse>> getBroadcastById(
             @PathVariable UUID broadcastId) {
         BroadcastResponse data = broadcastService.getBroadcastById(broadcastId);
@@ -68,7 +68,7 @@ public class BroadcastController {
 
     // US-09010: Emergency weather closure announcements
     @PostMapping("/emergency")
-    @PreAuthorize(CommunicationRoles.LEADERSHIP_OR_ADMIN)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_MANAGE)
     public ResponseEntity<ApiResponse<BroadcastResponse>> sendEmergencyAlert(
             @Valid @RequestBody EmergencyAlertRequest request) {
         BroadcastResponse data = broadcastService.sendEmergencyAlert(request);
@@ -81,7 +81,7 @@ public class BroadcastController {
 
     // US-09011: Track delivery status and trigger SMS fallback on failure
     @PutMapping("/delivery/{deliveryId}")
-    @PreAuthorize(CommunicationRoles.SYSTEM_OR_ADMIN)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_2_MANAGE)
     public ResponseEntity<ApiResponse<DeliveryLogResponse>> updateDeliveryStatus(
             @PathVariable UUID deliveryId,
             @Valid @RequestBody DeliveryLogUpdateRequest request) {
@@ -94,7 +94,7 @@ public class BroadcastController {
     }
 
     @GetMapping("/{broadcastId}/delivery-logs")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_VIEW)
     public ResponseEntity<ApiResponse<List<DeliveryLogResponse>>> getDeliveryLogs(
             @PathVariable UUID broadcastId) {
         List<DeliveryLogResponse> data = broadcastService.getDeliveryLogs(broadcastId);
@@ -107,7 +107,7 @@ public class BroadcastController {
 
     // US-09018: Pin urgent announcements to top of mobile app feeds
     @PutMapping("/{broadcastId}/pin")
-    @PreAuthorize(CommunicationRoles.LEADERSHIP_OR_ADMIN)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_MANAGE)
     public ResponseEntity<ApiResponse<BroadcastResponse>> pinBroadcast(
             @PathVariable UUID broadcastId,
             @Valid @RequestBody PinBroadcastRequest request) {
@@ -120,7 +120,7 @@ public class BroadcastController {
     }
 
     @GetMapping("/pinned")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<BroadcastResponse>>> getPinnedBroadcasts(
             @RequestParam String tenantId) {
         List<BroadcastResponse> data = broadcastService.getPinnedBroadcasts(tenantId);
@@ -133,7 +133,7 @@ public class BroadcastController {
 
     // US-09019: Archive past communication broadcasts for regulatory compliance
     @PutMapping("/{broadcastId}/archive")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.COMMUNITY_MANAGE)
     public ResponseEntity<ApiResponse<BroadcastResponse>> archiveBroadcast(
             @PathVariable UUID broadcastId,
             @Valid @RequestBody ArchiveBroadcastRequest request) {
@@ -146,7 +146,7 @@ public class BroadcastController {
     }
 
     @GetMapping("/archived")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_VIEW)
     public ResponseEntity<ApiResponse<List<BroadcastResponse>>> getArchivedBroadcasts(
             @RequestParam String tenantId) {
         List<BroadcastResponse> data = broadcastService.getArchivedBroadcasts(tenantId);

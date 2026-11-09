@@ -3,6 +3,7 @@ package com.kvs.communication.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kvs.core.exception.ForbiddenException;
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.util.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Ownership and tenant checks for parent-scoped records. authservice tokens carry the caller's id in a {@code userId}
@@ -29,17 +29,15 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ParentAccessGuard {
 
-    /** Staff roles that may read another parent's records (the endpoint's @PreAuthorize list, without the parent roles). */
-    private static final Set<String> STAFF_ROLES = Set.of("ROLE_SUPER_ADMIN", "ROLE_ADMIN");
-
     private final ObjectMapper objectMapper;
 
     public boolean isSuperAdmin() {
         return SecurityUtils.hasRole("SUPER_ADMIN");
     }
 
+    /** May read another parent's records: permission communication.parents.any-parent (by default SUPER_ADMIN only) */
     public boolean isStaff() {
-        return SecurityUtils.getCurrentUserRoles().stream().anyMatch(STAFF_ROLES::contains);
+        return SecurityUtils.can(CommunicationPerms.PARENTS_ANY_PARENT);
     }
 
     public Optional<String> currentUserId() {

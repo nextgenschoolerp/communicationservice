@@ -21,7 +21,7 @@ class ParentWardsAccessTest extends CommunicationTestSupport {
 
     @BeforeEach
     void mapWard() throws Exception {
-        postJson("/mobile/child-mappings", token("PARENT", parentUserId.toString()), ParentChildMappingRequest.builder()
+        postJson("/mobile/child-mappings", token("APPLICANT_PARENT", parentUserId.toString()), ParentChildMappingRequest.builder()
                 .tenantId(tenantId)
                 .parentUserId(parentUserId.toString())
                 .parentPhone("+919876543210")
@@ -41,7 +41,7 @@ class ParentWardsAccessTest extends CommunicationTestSupport {
     @Test
     @DisplayName("A parent reading their own wards gets 200")
     void parentReadsOwnWards() throws Exception {
-        JsonNode wards = data(getAs(wards(parentUserId.toString()), token("PARENT", parentUserId.toString()))
+        JsonNode wards = data(getAs(wards(parentUserId.toString()), token("APPLICANT_PARENT", parentUserId.toString()))
                 .andExpect(status().isOk()));
         assertThat(wards.size()).isEqualTo(1);
         assertThat(wards.get(0).get("studentName").asText()).isEqualTo("Aarav Sharma");
@@ -50,7 +50,7 @@ class ParentWardsAccessTest extends CommunicationTestSupport {
     @Test
     @DisplayName("A parent reading another parent's wards gets 403")
     void parentReadsOtherParentsWards() throws Exception {
-        getAs(wards(parentUserId.toString()), token("PARENT", otherParentId)).andExpect(status().isForbidden());
+        getAs(wards(parentUserId.toString()), token("APPLICANT_PARENT", otherParentId)).andExpect(status().isForbidden());
     }
 
     @Test
@@ -60,23 +60,25 @@ class ParentWardsAccessTest extends CommunicationTestSupport {
     }
 
     @Test
-    @DisplayName("A staff role reading a parent's wards gets 200")
+    @DisplayName("A staff role reading a parent's wards gets 200 (permission communication.parents.any-parent: SUPER_ADMIN by default)")
     void staffReadsParentsWards() throws Exception {
-        JsonNode wards = data(getAs(wards(parentUserId.toString()), token("ADMIN")).andExpect(status().isOk()));
+        JsonNode wards = data(getAs(wards(parentUserId.toString()), token("SUPER_ADMIN")).andExpect(status().isOk()));
         assertThat(wards.size()).isEqualTo(1);
     }
 
     @Test
-    @DisplayName("Staff of another tenant reading a parent's wards gets 403")
-    void staffOfOtherTenantGetsForbidden() throws Exception {
-        getAs(wards(parentUserId.toString()), token("ADMIN", "admin-" + run, "T-OTHER-" + run))
-                .andExpect(status().isForbidden());
+    @DisplayName("A super administrator whose token names another tenant may still read a parent's wards (super administrators cross tenants)")
+    void superAdminOfOtherTenantMayRead() throws Exception {
+        // RBAC migration: ADMIN is not a real role, so the only staff holding communication.parents.any-parent by default is
+        // SUPER_ADMIN, who is exempt from the tenant check. Another tenant's parent is still refused (test below).
+        getAs(wards(parentUserId.toString()), token("SUPER_ADMIN", "sa-" + run, "T-OTHER-" + run))
+                .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("A parent whose token names another tenant gets 403 for wards mapped in this tenant")
     void parentWithOtherTenantTokenGetsForbidden() throws Exception {
-        getAs(wards(parentUserId.toString()), token("PARENT", parentUserId.toString(), "T-OTHER-" + run))
+        getAs(wards(parentUserId.toString()), token("APPLICANT_PARENT", parentUserId.toString(), "T-OTHER-" + run))
                 .andExpect(status().isForbidden());
     }
 

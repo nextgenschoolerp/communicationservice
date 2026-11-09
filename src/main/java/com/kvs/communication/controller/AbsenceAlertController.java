@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.AbsenceAlertRequest;
 import com.kvs.communication.dto.AbsenceAlertResponse;
 import com.kvs.communication.service.AbsenceAlertService;
@@ -26,7 +26,7 @@ public class AbsenceAlertController {
 
     // US-09001: Dispatch automated alerts within 30 minutes of unexcused student absence
     @PostMapping({"", "/trigger"})
-    @PreAuthorize("hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'TEACHER', 'CLASS_TEACHER', 'SUBJECT_TEACHER', 'SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize(CommunicationPerms.ABSENCE_ALERTS_MANAGE)
     public ResponseEntity<ApiResponse<AbsenceAlertResponse>> dispatchAbsenceAlert(
             @Valid @RequestBody AbsenceAlertRequest request) {
         AbsenceAlertResponse data = absenceAlertService.dispatchAbsenceAlert(request);
@@ -38,7 +38,7 @@ public class AbsenceAlertController {
     }
 
     @PostMapping("/{alertId}/escalate")
-    @PreAuthorize("hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'TEACHER', 'CLASS_TEACHER', 'SUBJECT_TEACHER', 'SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize(CommunicationPerms.ABSENCE_ALERTS_MANAGE)
     public ResponseEntity<ApiResponse<AbsenceAlertResponse>> escalateAlert(
             @PathVariable UUID alertId) {
         AbsenceAlertResponse data = absenceAlertService.escalateAlert(alertId);
@@ -50,7 +50,7 @@ public class AbsenceAlertController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('SYSTEM_AUTOMATION', 'ATTENDANCE_OFFICER', 'TEACHER', 'CLASS_TEACHER', 'SUBJECT_TEACHER', 'SUPER_ADMIN', 'ADMIN')")
+    @PreAuthorize(CommunicationPerms.ABSENCE_ALERTS_VIEW)
     public ResponseEntity<ApiResponse<List<AbsenceAlertResponse>>> getAbsenceAlerts(
             @RequestParam String tenantId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {

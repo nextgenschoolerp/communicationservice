@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.GatePassService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class GatePassController {
 
     // US-09005: Generate digital gate passes on parent apps for early student pickups
     @PostMapping
-    @PreAuthorize(CommunicationRoles.GATE_PASS_REQUEST)
+    @PreAuthorize(CommunicationPerms.GATE_PASSES_MANAGE)
     public ResponseEntity<ApiResponse<GatePassResponse>> generateGatePass(
             @Valid @RequestBody GatePassRequest request) {
         GatePassResponse data = gatePassService.generateGatePass(request);
@@ -37,7 +37,7 @@ public class GatePassController {
 
     // US-09006: Scan gate pass QR codes at security gates to authorize student departure
     @PostMapping("/verify")
-    @PreAuthorize(CommunicationRoles.SECURITY_SCAN)
+    @PreAuthorize(CommunicationPerms.GATE_PASSES_2_MANAGE)
     public ResponseEntity<ApiResponse<GatePassResponse>> verifyGatePass(
             @Valid @RequestBody GatePassVerifyRequest request) {
         GatePassResponse data = gatePassService.verifyAndAuthorizeDeparture(request);
@@ -49,7 +49,7 @@ public class GatePassController {
     }
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<GatePassResponse>>> getStudentGatePasses(
             @RequestParam String tenantId,
             @RequestParam UUID studentId) {
@@ -63,7 +63,7 @@ public class GatePassController {
 
     // US-09017: Audit security gate entry and exit logs for unauthorized visitor attempts
     @PostMapping("/audit-logs")
-    @PreAuthorize(CommunicationRoles.SECURITY_SCAN)
+    @PreAuthorize(CommunicationPerms.GATE_PASSES_2_MANAGE)
     public ResponseEntity<ApiResponse<GateAuditLogResponse>> recordGateAuditLog(
             @Valid @RequestBody GateAuditLogRequest request) {
         GateAuditLogResponse data = gatePassService.recordGateAuditLog(request);
@@ -76,7 +76,7 @@ public class GatePassController {
     }
 
     @GetMapping("/audit-logs")
-    @PreAuthorize(CommunicationRoles.SECURITY_SCAN)
+    @PreAuthorize(CommunicationPerms.GATE_PASSES_VIEW)
     public ResponseEntity<ApiResponse<List<GateAuditLogResponse>>> getGateAuditLogs(
             @RequestParam String tenantId) {
         List<GateAuditLogResponse> data = gatePassService.getGateAuditLogs(tenantId);

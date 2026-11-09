@@ -45,7 +45,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09002: Register mobile app push notification device tokens")
     void testRegisterDeviceToken() throws Exception {
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         DeviceRegistrationRequest req = DeviceRegistrationRequest.builder()
                 .tenantId(tenantId)
@@ -63,7 +63,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09003: Multi-child profile switching under single parent credentials")
     void testMultiChildProfileSwitching() throws Exception {
-        String parentToken = token("PARENT", parentUserId.toString());
+        String parentToken = token("APPLICANT_PARENT", parentUserId.toString());
 
         // Map child 1
         ParentChildMappingRequest child1 = ParentChildMappingRequest.builder()
@@ -104,7 +104,7 @@ class MobileAndAbsenceIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09012: Configure notification preferences for parents to manage alert channels")
     void testNotificationPreferences() throws Exception {
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         NotificationPreferenceRequest req = NotificationPreferenceRequest.builder()
                 .tenantId(tenantId)

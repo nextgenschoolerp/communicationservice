@@ -90,6 +90,6 @@ class SupportAndCalendarIntegrationTest extends CommunicationTestSupport {
         req.setEndTime("25:00");
         putJson("/community/calendar-events/" + event.get("eventId").asText(), pro, req).andExpect(status().isBadRequest());
         req.setEndTime("18:30");
-        putJson("/community/calendar-events/" + event.get("eventId").asText(), token("PARENT"), req).andExpect(status().isForbidden());
+        putJson("/community/calendar-events/" + event.get("eventId").asText(), token("APPLICANT_PARENT"), req).andExpect(status().isForbidden());
     }
 }

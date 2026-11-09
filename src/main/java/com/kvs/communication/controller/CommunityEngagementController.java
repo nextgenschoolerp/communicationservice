@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
 import com.kvs.communication.service.CommunityEngagementService;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class CommunityEngagementController {
 
     // US-09008: Publish school calendar events, exam schedules, and photo galleries
     @PostMapping("/calendar-events")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.COMMUNITY_MANAGE)
     public ResponseEntity<ApiResponse<CalendarEventResponse>> createCalendarEvent(
             @Valid @RequestBody CalendarEventRequest request) {
         CalendarEventResponse data = communityService.createCalendarEvent(request);
@@ -38,7 +38,7 @@ public class CommunityEngagementController {
     }
 
     @PutMapping("/calendar-events/{eventId}")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.COMMUNITY_MANAGE)
     public ResponseEntity<ApiResponse<CalendarEventResponse>> updateCalendarEvent(
             @PathVariable("eventId") UUID eventId, @Valid @RequestBody CalendarEventRequest request) {
         return ResponseEntity.ok(ApiResponse.<CalendarEventResponse>builder()
@@ -49,7 +49,7 @@ public class CommunityEngagementController {
     }
 
     @GetMapping("/calendar-events")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<CalendarEventResponse>>> listCalendarEvents(
             @RequestParam String tenantId) {
         List<CalendarEventResponse> data = communityService.listPublishedEvents(tenantId);
@@ -62,7 +62,7 @@ public class CommunityEngagementController {
 
     // US-09009: Log parent grievance support tickets with automated SLA escalation rules
     @PostMapping("/grievances")
-    @PreAuthorize(CommunicationRoles.PARENT_ONLY)
+    @PreAuthorize(CommunicationPerms.MOBILE_MANAGE)
     public ResponseEntity<ApiResponse<GrievanceTicketResponse>> createGrievance(
             @Valid @RequestBody GrievanceTicketRequest request) {
         GrievanceTicketResponse data = communityService.createGrievanceTicket(request);
@@ -75,7 +75,7 @@ public class CommunityEngagementController {
     }
 
     @PutMapping("/grievances/{ticketId}")
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_MANAGE)
     public ResponseEntity<ApiResponse<GrievanceTicketResponse>> updateGrievance(
             @PathVariable UUID ticketId,
             @Valid @RequestBody GrievanceUpdateRequest request) {
@@ -88,7 +88,7 @@ public class CommunityEngagementController {
     }
 
     @GetMapping("/grievances")
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_VIEW)
     public ResponseEntity<ApiResponse<List<GrievanceTicketResponse>>> listGrievances(
             @RequestParam String tenantId) {
         List<GrievanceTicketResponse> data = communityService.listGrievances(tenantId);
@@ -101,7 +101,7 @@ public class CommunityEngagementController {
 
     // US-09013: Publish daily cafeteria menus and school bus schedule updates
     @PostMapping("/bulletins")
-    @PreAuthorize(CommunicationRoles.RECEPTION_DESK)
+    @PreAuthorize(CommunicationPerms.VISITORS_MANAGE)
     public ResponseEntity<ApiResponse<DailyBulletinResponse>> createBulletin(
             @Valid @RequestBody DailyBulletinRequest request) {
         DailyBulletinResponse data = communityService.createDailyBulletin(request);
@@ -114,7 +114,7 @@ public class CommunityEngagementController {
     }
 
     @GetMapping("/bulletins")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<DailyBulletinResponse>>> listBulletins(
             @RequestParam String tenantId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -128,7 +128,7 @@ public class CommunityEngagementController {
 
     // US-09014: Collect parent feedback surveys on school events and academic programs
     @PostMapping("/surveys")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.COMMUNITY_MANAGE)
     public ResponseEntity<ApiResponse<FeedbackSurveyResponse>> createSurvey(
             @Valid @RequestBody FeedbackSurveyRequest request) {
         FeedbackSurveyResponse data = communityService.createSurvey(request);
@@ -141,7 +141,7 @@ public class CommunityEngagementController {
     }
 
     @PostMapping("/surveys/responses")
-    @PreAuthorize(CommunicationRoles.PARENT_ONLY)
+    @PreAuthorize(CommunicationPerms.MOBILE_MANAGE)
     public ResponseEntity<ApiResponse<SurveyResponseDto>> submitSurveyResponse(
             @Valid @RequestBody SurveySubmissionRequest request) {
         SurveyResponseDto data = communityService.submitSurveyResponse(request);
@@ -154,7 +154,7 @@ public class CommunityEngagementController {
     }
 
     @GetMapping("/surveys/{surveyId}/responses")
-    @PreAuthorize(CommunicationRoles.BROADCAST_MANAGE)
+    @PreAuthorize(CommunicationPerms.BROADCASTS_VIEW)
     public ResponseEntity<ApiResponse<List<SurveyResponseDto>>> listSurveyResponses(
             @PathVariable UUID surveyId) {
         List<SurveyResponseDto> data = communityService.listSurveyResponses(surveyId);
@@ -167,7 +167,7 @@ public class CommunityEngagementController {
 
     // US-09015: Notify parents instantly when digital fee receipts or report cards are issued
     @PostMapping("/documents/notifications")
-    @PreAuthorize(CommunicationRoles.DOCUMENT_DISPATCH)
+    @PreAuthorize(CommunicationPerms.COMMUNITY_2_MANAGE)
     public ResponseEntity<ApiResponse<DocumentNotificationResponse>> sendDocumentNotification(
             @Valid @RequestBody DocumentNotificationRequest request) {
         DocumentNotificationResponse data = communityService.sendDocumentNotification(request);
@@ -180,7 +180,7 @@ public class CommunityEngagementController {
     }
 
     @GetMapping("/documents/notifications")
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<List<DocumentNotificationResponse>>> listDocumentNotifications(
             @RequestParam String tenantId,
             @RequestParam UUID studentId) {

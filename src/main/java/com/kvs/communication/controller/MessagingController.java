@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.MessageResponse;
 import com.kvs.communication.dto.SendMessageRequest;
 import com.kvs.communication.service.MessagingService;
@@ -24,7 +24,7 @@ public class MessagingController {
 
     // US-09004: Facilitate secure two-way messaging between parents and class teachers
     @PostMapping({"", "/send"})
-    @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
+    @PreAuthorize(CommunicationPerms.MESSAGES_MANAGE)
     public ResponseEntity<ApiResponse<MessageResponse>> sendMessage(
             @Valid @RequestBody SendMessageRequest request) {
         MessageResponse data = messagingService.sendMessage(request);
@@ -36,7 +36,7 @@ public class MessagingController {
     }
 
     @GetMapping({"", "/conversations"})
-    @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
+    @PreAuthorize(CommunicationPerms.MESSAGES_VIEW)
     public ResponseEntity<ApiResponse<List<MessageResponse>>> getConversations(
             @RequestParam(required = false) String userId) {
         List<MessageResponse> data = messagingService.getConversations(userId);
@@ -48,7 +48,7 @@ public class MessagingController {
     }
 
     @GetMapping("/threads/{threadId}")
-    @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
+    @PreAuthorize(CommunicationPerms.MESSAGES_VIEW)
     public ResponseEntity<ApiResponse<List<MessageResponse>>> getThreadMessages(
             @PathVariable UUID threadId) {
         List<MessageResponse> data = messagingService.getThreadMessages(threadId);
@@ -60,7 +60,7 @@ public class MessagingController {
     }
 
     @GetMapping("/inbox/{recipientId}")
-    @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
+    @PreAuthorize(CommunicationPerms.MESSAGES_VIEW)
     public ResponseEntity<ApiResponse<List<MessageResponse>>> getUserInbox(
             @PathVariable String recipientId) {
         List<MessageResponse> data = messagingService.getUserInbox(recipientId);
@@ -72,7 +72,7 @@ public class MessagingController {
     }
 
     @PutMapping("/{messageId}/read")
-    @PreAuthorize(CommunicationRoles.MESSAGING_ACCESS)
+    @PreAuthorize(CommunicationPerms.MESSAGES_MANAGE)
     public ResponseEntity<ApiResponse<MessageResponse>> markMessageRead(
             @PathVariable UUID messageId) {
         MessageResponse data = messagingService.markMessageRead(messageId);

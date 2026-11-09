@@ -18,7 +18,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09004: Facilitate secure two-way confidential messaging between parents and class teachers")
     void testTeacherParentMessaging() throws Exception {
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
         String teacherToken = token("TEACHER");
 
         UUID threadId = UUID.randomUUID();
@@ -97,7 +97,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09009: Log parent grievance support tickets with automated SLA escalation rules")
     void testParentGrievances() throws Exception {
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
         String deskToken = token("RECEPTIONIST");
 
         GrievanceTicketRequest req = GrievanceTicketRequest.builder()
@@ -137,7 +137,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
     @DisplayName("US-09013: Publish daily cafeteria menus and school bus schedule updates")
     void testDailyBulletins() throws Exception {
         String deskToken = token("RECEPTIONIST");
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         DailyBulletinRequest req = DailyBulletinRequest.builder()
                 .tenantId(tenantId)
@@ -159,7 +159,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
     @DisplayName("US-09014: Collect parent feedback surveys on school events and academic programs")
     void testParentFeedbackSurveys() throws Exception {
         String proToken = token("PUBLIC_RELATIONS_OFFICER");
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         FeedbackSurveyRequest surveyReq = FeedbackSurveyRequest.builder()
                 .tenantId(tenantId)
@@ -194,7 +194,7 @@ class CommunityEngagementIntegrationTest extends CommunicationTestSupport {
     @DisplayName("US-09015: Notify parents instantly when digital fee receipts or report cards are issued")
     void testDocumentDispatchNotification() throws Exception {
         String sysToken = token("SYSTEM_AUTOMATION");
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         DocumentNotificationRequest req = DocumentNotificationRequest.builder()
                 .tenantId(tenantId)

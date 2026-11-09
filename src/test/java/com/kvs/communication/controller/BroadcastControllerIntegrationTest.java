@@ -166,7 +166,7 @@ class BroadcastControllerIntegrationTest extends CommunicationTestSupport {
     @DisplayName("Security & Validation: 400 on invalid payload, 401 unauthenticated, 403 forbidden role")
     void testSecurityAndValidation() throws Exception {
         String proToken = token("PUBLIC_RELATIONS_OFFICER");
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         // 400 Bad Request on empty title
         BroadcastRequest invalidReq = BroadcastRequest.builder()

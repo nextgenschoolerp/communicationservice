@@ -17,7 +17,7 @@ class GatePassAndVisitorIntegrationTest extends CommunicationTestSupport {
     @Test
     @DisplayName("US-09005 & US-09006: Generate digital gate pass on parent app and verify with security QR scan")
     void testGatePassLifecycle() throws Exception {
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
         String securityToken = token("SECURITY_GUARD");
 
         GatePassRequest req = GatePassRequest.builder()
@@ -97,7 +97,7 @@ class GatePassAndVisitorIntegrationTest extends CommunicationTestSupport {
     @DisplayName("US-09016: Manage appointment booking slots for principal meetings and book by parent")
     void testAppointmentSlots() throws Exception {
         String receptionistToken = token("RECEPTIONIST");
-        String parentToken = token("PARENT");
+        String parentToken = token("APPLICANT_PARENT");
 
         AppointmentSlotRequest slotReq = AppointmentSlotRequest.builder()
                 .tenantId(tenantId)

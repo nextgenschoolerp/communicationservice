@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.SupportContactRequest;
 import com.kvs.communication.dto.SupportContactResponse;
 import com.kvs.communication.service.SupportContactService;
@@ -23,13 +23,13 @@ public class SupportContactController {
     private final SupportContactService contactService;
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     public ResponseEntity<ApiResponse<SupportContactResponse>> get(@RequestParam("tenantId") String tenantId) {
         return ok("Support contact retrieved successfully", contactService.get(tenantId));
     }
 
     @PutMapping
-    @PreAuthorize(CommunicationRoles.LEADERSHIP_SETTINGS)
+    @PreAuthorize(CommunicationPerms.STAFF_ALERTS_MANAGE)
     public ResponseEntity<ApiResponse<SupportContactResponse>> save(@Valid @RequestBody SupportContactRequest request) {
         return ok("Support contact saved", contactService.save(request));
     }

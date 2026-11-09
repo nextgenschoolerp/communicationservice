@@ -1,7 +1,7 @@
 package com.kvs.communication.controller;
 
+import com.kvs.communication.config.CommunicationPerms;
 import com.kvs.core.dto.ApiResponse;
-import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.StaffAlertPreferenceDto;
 import com.kvs.communication.entity.StaffAlertPreference;
 import com.kvs.communication.repo.StaffAlertPreferenceRepository;
@@ -23,7 +23,7 @@ public class StaffAlertPreferenceController {
     private final StaffAlertPreferenceRepository repository;
 
     @GetMapping
-    @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
+    @PreAuthorize(CommunicationPerms.ANY_AUTHENTICATED)
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<StaffAlertPreferenceDto>> get(@RequestParam("tenantId") String tenantId,
                                                                     @RequestParam("userId") String userId) {
@@ -34,7 +34,7 @@ public class StaffAlertPreferenceController {
     }
 
     @PutMapping
-    @PreAuthorize(CommunicationRoles.LEADERSHIP_SETTINGS)
+    @PreAuthorize(CommunicationPerms.STAFF_ALERTS_MANAGE)
     @Transactional
     public ResponseEntity<ApiResponse<StaffAlertPreferenceDto>> save(@Valid @RequestBody StaffAlertPreferenceDto request) {
         StaffAlertPreference p = repository.findByTenantIdAndUserId(request.getTenantId(), request.getUserId())

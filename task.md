@@ -1,4 +1,4 @@
-# Task Execution Record: Module 09 — Communication, Parent Portal & App
+﻿# Task Execution Record: Module 09 — Communication, Parent Portal & App
 
 Execution of the `BRD_API_Generate` skill for **Module 09** based on [`story/module9/School_ERP_Module_09_Communication_App_1000.md`](../story/module9/School_ERP_Module_09_Communication_App_1000.md), [`module9.sql`](../story/module9/module9.sql) and [`module9.md`](../story/module9/module9.md).
 
@@ -58,7 +58,7 @@ Execution of the `BRD_API_Generate` skill for **Module 09** based on [`story/mod
 - [x] Step 7: Postman Collection (`postman/School_ERP_CommunicationService.postman_collection.json`)
 - [x] Step 8: API Wiki Documentation (`wiki/api-docs/School_ERP_Module_09_Communication_API_Documentation.md`)
 - [x] Step 9: Re-runnable Seed Data (`src/main/resources/db/seed/module09_communication_seed.sql`)
-- [x] Step 10: UI Wiring & Reverse Proxy (`school_webapp/src/api/communicationService.js`, `school_webapp/src/components/CommunicationsLive.jsx`, `school_webapp/src/pages/Admin.jsx`, `school_webapp/docs/communicationservice-api-mapping.md`)
+- [x] Step 10: UI Wiring & Reverse Proxy (`school_webapp/src/api/communicationService.js`, `school_webapp/src/components/CommunicationsLive.jsx`, `school_webapp/src/pages/Admin.jsx`, `school_webapp/docs/mapping/communicationservice-api-mapping.md`)
 
 ---
 
@@ -85,5 +85,5 @@ Execution of the `BRD_API_Generate` skill for **Module 09** based on [`story/mod
   - Frontend API client in `school_webapp/src/api/communicationService.js`
   - Frontend interactive workspace in `school_webapp/src/components/CommunicationsLive.jsx`
   - Integrated into `school_webapp/src/pages/Admin.jsx` (`Communications` and `Calendar`)
-  - Complete UI to API mapping documentation in `school_webapp/docs/communicationservice-api-mapping.md`
+  - Complete UI to API mapping documentation in `school_webapp/docs/mapping/communicationservice-api-mapping.md`
   - Configured Vite proxy in `school_webapp/vite.config.js` and Nginx in `deploy/nginx.conf`

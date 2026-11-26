@@ -59,6 +59,7 @@ public class BroadcastService {
                 .senderName(request.getSenderName() != null ? request.getSenderName() : "PR Office")
                 .title(request.getTitle())
                 .messageBody(request.getMessageBody())
+                .translations(CircularTranslations.toJson(CircularTranslations.validate(request.getTranslations())))
                 .targetAudience(request.getTargetAudience())
                 .channel(request.getChannel())
                 .priority(request.getPriority() != null ? request.getPriority() : BroadcastPriority.NORMAL)

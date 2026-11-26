@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -48,4 +49,10 @@ public class BroadcastRequest {
     private Boolean isPinned;
 
     private Instant pinnedUntil;
+
+    /**
+     * Phase 6 (i18n): translated versions of the circular, by language code: {"hi": {"title": "...", "body": "..."}}.
+     * Recipients whose language has a version get it by email; the others get the main title and message.
+     */
+    private Map<String, Map<String, String>> translations;
 }

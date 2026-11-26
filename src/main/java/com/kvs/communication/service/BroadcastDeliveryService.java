@@ -36,8 +36,11 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class BroadcastDeliveryService {
 
-    /** Someone to send to. label: "Parent of Aarav Sharma (Class 7)" or "Staff · Mathematics teacher" */
-    public record Recipient(String name, String label, String phone, String email) { }
+    /**
+     * Someone to send to. label: "Parent of Aarav Sharma (Class 7)" or "Staff · Mathematics teacher". language: the language
+     * the guardian chose for messages, or null (staff have no language yet, and so has a guardian who chose none).
+     */
+    public record Recipient(String name, String label, String phone, String email, String language) { }
 
     private static final int BATCH = 100;
     private static final String NO_NUMBER = "No valid mobile number";
@@ -66,7 +69,7 @@ public class BroadcastDeliveryService {
             if (families) out.addAll(families(clients.guardianContacts(bearer, tenantId, a.startsWith("GRADE_") ? gradeCode(a) : null)));
             if (staff) {
                 for (JsonNode s : clients.staffContacts(bearer, tenantId)) {
-                    out.add(new Recipient(text(s, "name"), "Staff · " + Objects.requireNonNullElse(text(s, "designation"), "staff"), text(s, "phone"), text(s, "email")));
+                    out.add(new Recipient(text(s, "name"), "Staff · " + Objects.requireNonNullElse(text(s, "designation"), "staff"), text(s, "phone"), text(s, "email"), null));
                 }
             }
         } catch (RestClientResponseException e) {
@@ -99,8 +102,10 @@ public class BroadcastDeliveryService {
             JsonNode first = group.get(0);
             String children = String.join(", ", group.stream().map(c -> text(c, "studentName") + (text(c, "className") != null ? " (" + text(c, "className") + ")" : "")).toList());
             String who = text(first, "relationship") != null ? capitalise(text(first, "relationship")) : "Guardian";
+            // siblings share one message: the first language any of them chose
+            String language = group.stream().map(c -> text(c, "language")).filter(Objects::nonNull).findFirst().orElse(null);
             out.add(new Recipient(Objects.requireNonNullElse(text(first, "guardianName"), "No guardian recorded"), who + " of " + children,
-                    text(first, "phone"), text(first, "email")));
+                    text(first, "phone"), text(first, "email"), language));
         }
         return out;
     }
@@ -115,7 +120,11 @@ public class BroadcastDeliveryService {
         if (bearer == null) throw new BadRequestException("Sign in again to send this circular");
         List<Recipient> people = recipients(bearer, b.getTenantId(), b.getTargetAudience());
         ChannelType first = b.getChannel() == ChannelType.MULTI_CHANNEL ? ChannelType.WHATSAPP : b.getChannel();
+        // Translated versions go out by email only: the SMS and WhatsApp templates are registered in one language
+        Map<String, CircularTranslations.Version> versions = first == ChannelType.EMAIL
+                ? CircularTranslations.fromJson(b.getTranslations()) : Map.of();
         List<BroadcastDeliveryLog> rows = new ArrayList<>();
+        List<String> versionOf = new ArrayList<>();   // parallel to rows: the version each row is sent in ("" = the main text)
         for (Recipient r : people) {
             BroadcastDeliveryLog row = BroadcastDeliveryLog.builder()
                     .broadcastId(b.getBroadcastId()).recipientName(clip(r.name() + " · " + r.label(), 300))
@@ -125,14 +134,26 @@ public class BroadcastDeliveryService {
             else if (first == ChannelType.EMAIL && r.email() == null) skip(row, "No email address on record");
             else if (first != ChannelType.EMAIL && digits(r.phone()) == null) skip(row, "No mobile number on record");
             rows.add(row);
+            versionOf.add(r.language() != null && versions.containsKey(r.language()) ? r.language() : "");
         }
-        logs.saveAll(rows);
+        // saveAll returns the stored copies in the same order. Each language group is sent by its own task, with its own rows only.
+        List<BroadcastDeliveryLog> stored = logs.saveAll(rows);
+        Map<String, List<UUID>> groups = new LinkedHashMap<>();
+        for (int k = 0; k < stored.size(); k++) {
+            if (stored.get(k).getDeliveryStatus() != DeliveryStatus.QUEUED) continue;   // skipped rows have nothing to send
+            groups.computeIfAbsent(versionOf.get(k), v -> new ArrayList<>()).add(stored.get(k).getDeliveryId());
+        }
         UUID id = b.getBroadcastId();
+        String tenant = b.getTenantId();
+        CircularTranslations.Version main = new CircularTranslations.Version(b.getTitle(), b.getMessageBody());
         // the pool thread has no request: run the delivery for the circular's school, so it reads and writes that school's schema
-        Runnable send = () -> pool.submit(() -> TenantContext.runAs(b.getTenantId(), () -> {
-            try { send(id, b.getTenantId(), b.getTitle(), b.getMessageBody(), bearer); }
-            catch (Exception e) { log.error("Delivery of circular {} stopped: {}", id, e.getMessage(), e); }
-        }));
+        Runnable send = () -> groups.forEach((version, ids) -> {
+            CircularTranslations.Version chosen = version.isEmpty() ? main : versions.get(version);
+            pool.submit(() -> TenantContext.runAs(tenant, () -> {
+                try { send(id, tenant, ids, chosen.title(), chosen.body(), bearer); }
+                catch (Exception e) { log.error("Delivery of circular {} stopped: {}", id, e.getMessage(), e); }
+            }));
+        });
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override public void afterCommit() { send.run(); }
@@ -143,8 +164,9 @@ public class BroadcastDeliveryService {
     }
 
     /** Sends the circular's queued rows; WhatsApp that fails or is not set up goes again by SMS. */
-    void send(UUID broadcastId, String tenantId, String title, String body, String bearer) {
-        List<BroadcastDeliveryLog> queued = logs.findByBroadcastIdAndDeliveryStatus(broadcastId, DeliveryStatus.QUEUED);
+    void send(UUID broadcastId, String tenantId, Collection<UUID> deliveryIds, String title, String body, String bearer) {
+        List<BroadcastDeliveryLog> queued = logs.findAllById(deliveryIds).stream()
+                .filter(l -> l.getDeliveryStatus() == DeliveryStatus.QUEUED).toList();
         Map<ChannelType, List<BroadcastDeliveryLog>> byChannel = new EnumMap<>(ChannelType.class);
         queued.forEach(l -> byChannel.computeIfAbsent(l.getChannel(), k -> new ArrayList<>()).add(l));
         for (Map.Entry<ChannelType, List<BroadcastDeliveryLog>> e : byChannel.entrySet()) {

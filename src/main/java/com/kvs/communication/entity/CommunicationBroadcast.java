@@ -42,6 +42,10 @@ public class CommunicationBroadcast extends BaseAuditEntity {
     @Column(name = "message_body", nullable = false, columnDefinition = "TEXT")
     private String messageBody;
 
+    /** The translated versions as JSON (service/CircularTranslations); null when the circular has none */
+    @Column(name = "translations", columnDefinition = "TEXT")
+    private String translations;
+
     @Column(name = "target_audience", nullable = false, length = 50)
     private String targetAudience;
 

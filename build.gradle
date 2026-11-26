@@ -46,6 +46,8 @@ dependencies {
     implementation 'io.micrometer:micrometer-observation'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
     implementation 'com.kvs.core:ms-core:1.0.0-SNAPSHOT'
+    // file storage on S3 (kvs.storage.type=s3); the storage API itself is in ms-core
+    implementation 'com.kvs.core:ms-aws:1.0.0-SNAPSHOT'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

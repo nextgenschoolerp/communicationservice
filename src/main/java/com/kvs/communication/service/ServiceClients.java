@@ -26,11 +26,13 @@ public class ServiceClients {
     private final String authUrl;
     private final String studentUrl;
     private final String hrUrl;
+    private final String internalKey;
 
     public ServiceClients(ObjectMapper objectMapper,
                           @Value("${communication.services.auth-url:http://localhost:8082/authservice}") String authUrl,
                           @Value("${communication.services.student-url:http://localhost:8084/studentservice}") String studentUrl,
-                          @Value("${communication.services.hr-url:http://localhost:8088/hrservice}") String hrUrl) {
+                          @Value("${communication.services.hr-url:http://localhost:8088/hrservice}") String hrUrl,
+                          @Value("${kvs.internal.key:schoolerp-dev-internal-key}") String internalKey) {
         SimpleClientHttpRequestFactory f = new SimpleClientHttpRequestFactory();
         f.setConnectTimeout(5_000);
         // a batch of 100 messages is sent one by one by authservice
@@ -40,6 +42,7 @@ public class ServiceClients {
         this.authUrl = authUrl;
         this.studentUrl = studentUrl;
         this.hrUrl = hrUrl;
+        this.internalKey = internalKey;
     }
 
     /** The caller's Authorization header, read while still on the request thread */
@@ -59,14 +62,24 @@ public class ServiceClients {
         return get(bearer, hrUrl + "/api/v1/hr/staff-contacts?tenantId={t}", tenantId);
     }
 
+    /** Whether the sender may send circulars (authservice settings.messages.send-circulars), asked with their own token */
+    public boolean maySendCirculars(String bearer, String tenantId) {
+        return get(bearer, authUrl + "/api/v1/tenants/{t}/integrations/may-send?purpose=CIRCULARS", tenantId).path("allowed").asBoolean(false);
+    }
+
     public JsonNode channelReadiness(String bearer, String tenantId) {
         return get(bearer, authUrl + "/api/v1/tenants/{t}/integrations/readiness", tenantId);
     }
 
-    /** body: {channel, reference, messages: [{ref, recipient, subject, title, body}]}; returns {channel, provider, results: [...]} */
-    public JsonNode deliver(String bearer, String tenantId, Map<String, Object> body) {
+    /**
+     * body: {channel, reference, messages: [{ref, recipient, subject, title, body}]}; returns {channel, provider, results: [...]}.
+     * Sent with the internal service key: it runs in the background, after the sender's permission was checked
+     * ({@link BroadcastDeliveryService#queue}) and possibly after their token expired.
+     */
+    public JsonNode deliver(String tenantId, Map<String, Object> body) {
         String json = http.post().uri(authUrl + "/api/v1/tenants/{t}/integrations/deliver", tenantId)
-                .header(HttpHeaders.AUTHORIZATION, bearer).contentType(MediaType.APPLICATION_JSON)
+                .header("X-Internal-Key", internalKey).header("X-Internal-Service", "communicationservice")
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(body).retrieve().body(String.class);
         return data(json);
     }

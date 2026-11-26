@@ -3,12 +3,10 @@ package com.kvs.communication.controller;
 import com.kvs.core.dto.ApiResponse;
 import com.kvs.communication.config.CommunicationRoles;
 import com.kvs.communication.dto.*;
-import com.kvs.communication.entity.SchoolDocument;
 import com.kvs.communication.service.DocumentLibraryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,15 +66,8 @@ public class DocumentLibraryController {
 
     @GetMapping("/{documentId}/content")
     @PreAuthorize(CommunicationRoles.ANY_AUTHENTICATED)
-    public ResponseEntity<byte[]> download(@PathVariable("documentId") UUID documentId) {
-        SchoolDocument doc = documentService.document(documentId);
-        byte[] bytes = documentService.content(documentId);
-        MediaType type = doc.getContentType() == null ? MediaType.APPLICATION_OCTET_STREAM : MediaType.parseMediaType(doc.getContentType());
-        return ResponseEntity.ok()
-                .contentType(type)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                        .filename(doc.getFileName(), StandardCharsets.UTF_8).build().toString())
-                .body(bytes);
+    public ResponseEntity<Resource> download(@PathVariable("documentId") UUID documentId) {
+        return documentService.documentFile(documentId);
     }
 
     @PutMapping("/{documentId}/access")

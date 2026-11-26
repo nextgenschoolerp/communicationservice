@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class DocumentLibraryIntegrationTest extends CommunicationTestSupport {
@@ -66,5 +67,60 @@ class DocumentLibraryIntegrationTest extends CommunicationTestSupport {
         assertThat(history.size()).isEqualTo(3);
         assertThat(history.get(0).get("action").asText()).isEqualTo("Share link copied");
         assertThat(data(getAs("/documents", teacher, "tenantId", tenantId.toString())).get(0).get("isShared").asBoolean()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Documents: saved in the shared file store; a fake PDF is refused; access level decides who sees and opens it")
+    void testLibraryStorageAndAccess() throws Exception {
+        String admin = token("SUPER_ADMIN", "u2222222-2222-2222-2222-222222222222");
+        String teacher = token("TEACHER");
+        String parent = token("PARENT");
+        String principal = token("PRINCIPAL");
+
+        DocumentFolderRequest folderReq = DocumentFolderRequest.builder()
+                .tenantId(tenantId).name("Board papers " + run).defaultAccess("ALL_STAFF").build();
+        String folderId = data(postJson("/documents/folders", admin, folderReq).andExpect(status().isCreated()))
+                .get("folderId").asText();
+
+        byte[] pdf = "%PDF-1.4 board minutes".getBytes(StandardCharsets.US_ASCII);
+        JsonNode minutes = data(mockMvc.perform(multipart(BASE + "/documents/folders/" + folderId + "/files")
+                        .file(new MockMultipartFile("file", "Board minutes.pdf", "application/pdf", pdf))
+                        .header("Authorization", admin))
+                .andExpect(status().isCreated()));
+        String minutesId = minutes.get("documentId").asText();
+        assertThat(minutes.get("hasContent").asBoolean()).isTrue();
+        assertThat(minutes.get("sizeBytes").asLong()).isEqualTo(pdf.length);
+
+        mockMvc.perform(multipart(BASE + "/documents/folders/" + folderId + "/files")
+                        .file(new MockMultipartFile("file", "fake.pdf", "application/pdf", "<html>not a pdf".getBytes()))
+                        .header("Authorization", admin))
+                .andExpect(status().isBadRequest());
+
+        putJson("/documents/" + minutesId + "/access", admin, new DocumentAccessRequest("ADMINISTRATORS", "Rajesh Admin"))
+                .andExpect(status().isOk());
+
+        // ALL_STAFF file (folder default) for the staff, not for parents
+        mockMvc.perform(multipart(BASE + "/documents/folders/" + folderId + "/files")
+                        .file(new MockMultipartFile("file", "Timetable.pdf", "application/pdf", "%PDF-1.4 timetable".getBytes()))
+                        .header("Authorization", admin))
+                .andExpect(status().isCreated());
+
+        // a teacher cannot see or open the administrators' file
+        assertThat(data(getAs("/documents", teacher, "tenantId", tenantId.toString(), "folderId", folderId)
+                .andExpect(status().isOk())).size()).isEqualTo(1);
+        mockMvc.perform(get(BASE + "/documents/" + minutesId + "/content").header("Authorization", teacher))
+                .andExpect(status().isNotFound());
+        // a parent sees neither file (the timetable is staff only)
+        assertThat(data(getAs("/documents", parent, "tenantId", tenantId.toString(), "folderId", folderId)
+                .andExpect(status().isOk())).size()).isZero();
+        mockMvc.perform(get(BASE + "/documents/" + minutesId + "/content").header("Authorization", parent))
+                .andExpect(status().isNotFound());
+        // the principal sees both, and the administrators' file downloads with the safe headers
+        assertThat(data(getAs("/documents", principal, "tenantId", tenantId.toString(), "folderId", folderId)
+                .andExpect(status().isOk())).size()).isEqualTo(2);
+        mockMvc.perform(get(BASE + "/documents/" + minutesId + "/content").header("Authorization", principal))
+                .andExpect(status().isOk())
+                .andExpect(content().bytes(pdf))
+                .andExpect(header().string("X-Content-Type-Options", "nosniff"));
     }
 }

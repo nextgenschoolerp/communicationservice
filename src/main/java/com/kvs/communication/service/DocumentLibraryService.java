@@ -7,27 +7,36 @@ import com.kvs.communication.dto.*;
 import com.kvs.communication.entity.DocumentAccessLog;
 import com.kvs.communication.entity.DocumentFolder;
 import com.kvs.communication.entity.SchoolDocument;
-import com.kvs.communication.entity.SchoolDocumentContent;
 import com.kvs.communication.repo.DocumentAccessLogRepository;
 import com.kvs.communication.repo.DocumentFolderRepository;
-import com.kvs.communication.repo.SchoolDocumentContentRepository;
 import com.kvs.communication.repo.SchoolDocumentRepository;
+import com.kvs.core.storage.FileResponses;
+import com.kvs.core.storage.FileUploads;
+import com.kvs.core.storage.StoredFile;
+import com.kvs.core.storage.UploadPolicy;
+import com.kvs.core.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** School document library (Documents page): folders, files, who can view them and their access history. */
+/**
+ * School document library (Documents page): folders, files, who can view them and their access history.
+ * Files are kept in the shared file store (ms-core {@link FileUploads}, area {@code library}).
+ */
 @Service
 @RequiredArgsConstructor
 public class DocumentLibraryService {
@@ -36,10 +45,17 @@ public class DocumentLibraryService {
             "ALL_STAFF", "All staff", "STAFF_AND_PARENTS", "Staff & parents",
             "PUBLIC", "Public", "ADMINISTRATORS", "School administrators");
 
+    /** Roles that may open an ADMINISTRATORS document: the school's leadership. */
+    private static final Set<String> ADMINISTRATOR_ROLES = Set.of(
+            "SUPER_ADMIN", "ADMIN", "TRUSTEE", "PRINCIPAL", "SCHOOL_PRINCIPAL", "VICE_PRINCIPAL");
+
+    /** Parent roles: they see only the documents shared with parents. */
+    private static final Set<String> PARENT_ROLES = Set.of("PARENT", "APPLICANT_PARENT");
+
     private final DocumentFolderRepository folderRepository;
     private final SchoolDocumentRepository documentRepository;
-    private final SchoolDocumentContentRepository contentRepository;
     private final DocumentAccessLogRepository accessLogRepository;
+    private final FileUploads fileUploads;
     private final CommunicationAuditService auditService;
 
     @Value("${communication.time-zone:Asia/Kolkata}")
@@ -47,8 +63,10 @@ public class DocumentLibraryService {
 
     @Transactional(readOnly = true)
     public List<DocumentFolderResponse> listFolders(String tenantId) {
+        Collection<String> roles = SecurityUtils.getCurrentUserRoles();
         Map<UUID, Long> counts = documentRepository.findByTenantIdOrderByModifiedOnDescFileNameAsc(tenantId).stream()
                 .filter(d -> !Boolean.TRUE.equals(d.getIsArchived()))
+                .filter(d -> canView(d.getAccessLevel(), roles))
                 .collect(Collectors.groupingBy(SchoolDocument::getFolderId, Collectors.counting()));
         return folderRepository.findByTenantIdOrderBySortOrderAscNameAsc(tenantId).stream()
                 .map(f -> mapFolder(f, counts.getOrDefault(f.getFolderId(), 0L)))
@@ -79,16 +97,22 @@ public class DocumentLibraryService {
         folder.setDefaultAccess(request.getDefaultAccess());
         auditService.logSuccess("DocumentFolder", "UPDATE_FOLDER", "Folder " + folderId + " default access " + request.getDefaultAccess());
         long count = documentRepository.findByTenantIdAndFolderIdOrderByModifiedOnDescFileNameAsc(folder.getTenantId(), folderId).stream()
-                .filter(d -> !Boolean.TRUE.equals(d.getIsArchived())).count();
+                .filter(d -> !Boolean.TRUE.equals(d.getIsArchived()))
+                .filter(d -> canView(d.getAccessLevel(), SecurityUtils.getCurrentUserRoles()))
+                .count();
         return mapFolder(folder, count);
     }
 
     @Transactional(readOnly = true)
     public List<SchoolDocumentResponse> listDocuments(String tenantId, UUID folderId) {
+        Collection<String> roles = SecurityUtils.getCurrentUserRoles();
         List<SchoolDocument> docs = folderId == null
                 ? documentRepository.findByTenantIdOrderByModifiedOnDescFileNameAsc(tenantId)
                 : documentRepository.findByTenantIdAndFolderIdOrderByModifiedOnDescFileNameAsc(tenantId, folderId);
-        return docs.stream().map(this::mapDocument).collect(Collectors.toList());
+        return docs.stream()
+                .filter(d -> canView(d.getAccessLevel(), roles))
+                .map(this::mapDocument)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -97,27 +121,22 @@ public class DocumentLibraryService {
             throw new BadRequestException("Choose a file to upload");
         }
         DocumentFolder folder = folder(folderId);
-        String fileName = file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()
-                ? "Untitled" : file.getOriginalFilename().replaceAll("[\\\\/]", "_");
-        byte[] bytes;
-        try {
-            bytes = file.getBytes();
-        } catch (IOException e) {
-            throw new BadRequestException("The file could not be read");
-        }
+        // the file is checked (type, size, signature) and saved; it is removed again if this transaction rolls back
+        StoredFile stored = fileUploads.save(folder.getTenantId(), UploadPolicy.LIBRARY_DOCUMENT, folderId, file);
         SchoolDocument doc = documentRepository.save(SchoolDocument.builder()
                 .tenantId(folder.getTenantId())
                 .folderId(folderId)
-                .fileName(fileName)
-                .contentType(file.getContentType())
-                .sizeBytes((long) bytes.length)
+                .fileName(stored.fileName())
+                .contentType(stored.contentType())
+                .sizeBytes(stored.sizeBytes())
+                .checksumSha256(stored.sha256())
+                .storageKey(stored.key())
                 .ownerUserId(ownerUserId)
                 .ownerName(ownerName == null || ownerName.isBlank() ? "Staff member" : ownerName.trim())
                 .accessLevel(folder.getDefaultAccess())
                 .modifiedOn(LocalDate.now(ZoneId.of(timeZone)))
                 .hasContent(true)
                 .build());
-        contentRepository.save(SchoolDocumentContent.builder().documentId(doc.getDocumentId()).bytes(bytes).build());
         log(doc, doc.getOwnerName(), "Uploaded version " + doc.getDocVersion());
         auditService.logSuccess("SchoolDocument", "UPLOAD_DOCUMENT", "Uploaded document " + doc.getDocumentId() + " to folder " + folderId);
         return mapDocument(doc);
@@ -129,11 +148,16 @@ public class DocumentLibraryService {
                 .orElseThrow(() -> new ResourceNotFoundException("SchoolDocument", "documentId", documentId));
     }
 
+    /**
+     * The file for download. A document the caller may not see answers 404, as it does in the list.
+     */
     @Transactional(readOnly = true)
-    public byte[] content(UUID documentId) {
-        return contentRepository.findById(documentId)
-                .orElseThrow(() -> new ResourceNotFoundException("No file is stored for document " + documentId))
-                .getBytes();
+    public ResponseEntity<Resource> documentFile(UUID documentId) {
+        SchoolDocument doc = visibleDocument(documentId);
+        if (doc.getStorageKey() == null) {
+            throw new ResourceNotFoundException("No file is stored for document " + documentId);
+        }
+        return FileResponses.attachment(fileUploads.store(), doc.getStorageKey(), doc.getContentType(), doc.getFileName());
     }
 
     @Transactional
@@ -149,7 +173,7 @@ public class DocumentLibraryService {
 
     @Transactional
     public DocumentActivityResponse recordActivity(UUID documentId, DocumentActivityRequest request) {
-        SchoolDocument doc = document(documentId);
+        SchoolDocument doc = visibleDocument(documentId);
         if (Boolean.TRUE.equals(request.getShared())) {
             doc.setIsShared(true);
         }
@@ -158,9 +182,35 @@ public class DocumentLibraryService {
 
     @Transactional(readOnly = true)
     public List<DocumentActivityResponse> accessHistory(UUID documentId) {
-        document(documentId);
+        visibleDocument(documentId);
         return accessLogRepository.findByDocumentIdOrderByOccurredAtDesc(documentId).stream()
                 .map(this::mapLog).collect(Collectors.toList());
+    }
+
+    /**
+     * Whether a caller with these authorities may see a document of this access level.
+     * ALL_STAFF: anyone except a parent. STAFF_AND_PARENTS and PUBLIC: any signed-in user.
+     * ADMINISTRATORS: the school's leadership only.
+     */
+    static boolean canView(String accessLevel, Collection<String> authorities) {
+        if (accessLevel == null) {
+            return false;
+        }
+        return switch (accessLevel) {
+            case "PUBLIC", "STAFF_AND_PARENTS" -> true;
+            case "ALL_STAFF" -> PARENT_ROLES.stream().noneMatch(r -> authorities.contains("ROLE_" + r));
+            case "ADMINISTRATORS" -> ADMINISTRATOR_ROLES.stream().anyMatch(r -> authorities.contains("ROLE_" + r));
+            default -> false;
+        };
+    }
+
+    /** The document, or 404 when the caller may not see it (so a hidden file is not revealed). */
+    private SchoolDocument visibleDocument(UUID documentId) {
+        SchoolDocument doc = document(documentId);
+        if (!canView(doc.getAccessLevel(), SecurityUtils.getCurrentUserRoles())) {
+            throw new ResourceNotFoundException("SchoolDocument", "documentId", documentId);
+        }
+        return doc;
     }
 
     private DocumentFolder folder(UUID folderId) {

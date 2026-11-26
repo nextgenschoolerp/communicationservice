@@ -2,7 +2,10 @@ package com.kvs.communication.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kvs.communication.service.BroadcastDeliveryService;
 import com.kvs.communication.service.ServiceClients;
+import com.kvs.communication.service.TestJobs;
+import com.kvs.core.messaging.JobQueue;
 import com.kvs.core.service.JwtTokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -33,6 +36,9 @@ public abstract class CommunicationTestSupport {
     @Autowired protected ObjectMapper objectMapper;
     @Autowired protected JwtTokenService jwtTokenService;
     @MockBean protected ServiceClients serviceClients;
+    /** No job table in the H2 test database: a queued circular delivery job runs at once instead */
+    @MockBean protected JobQueue jobQueue;
+    @Autowired protected BroadcastDeliveryService deliveryService;
 
     protected final String run = UUID.randomUUID().toString().substring(0, 8);
     protected final String tenantId = "T-COMM-" + run;
@@ -72,7 +78,12 @@ public abstract class CommunicationTestSupport {
         when(serviceClients.guardianContacts(any(), any(), any())).thenReturn(mockGuardians);
         when(serviceClients.staffContacts(any(), any())).thenReturn(mockStaff);
         when(serviceClients.channelReadiness(any(), any())).thenReturn(mockReadiness);
-        when(serviceClients.deliver(any(), any(), any())).thenReturn(mockDeliver);
+        when(serviceClients.deliver(any(), any())).thenReturn(mockDeliver);
+        when(serviceClients.maySendCirculars(any(), any())).thenReturn(true);
+        when(jobQueue.enqueue(any(), any())).thenAnswer(inv -> {
+            TestJobs.run(deliveryService, inv.getArgument(1), tenant, 1);
+            return UUID.randomUUID();
+        });
     }
 
     protected String token(String role) {

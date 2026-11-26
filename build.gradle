@@ -48,6 +48,8 @@ dependencies {
     implementation 'com.kvs.core:ms-core:1.0.0-SNAPSHOT'
     // file storage on S3 (kvs.storage.type=s3); the storage API itself is in ms-core
     implementation 'com.kvs.core:ms-aws:1.0.0-SNAPSHOT'
+    // background jobs (circular delivery) in each school's job table; messaging-queue-plan.md Phase 1
+    implementation 'com.kvs.core:ms-messaging:1.0.0-SNAPSHOT'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

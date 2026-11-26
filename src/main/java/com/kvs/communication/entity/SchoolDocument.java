@@ -63,6 +63,13 @@ public class SchoolDocument extends BaseAuditEntity {
     @Builder.Default
     private Boolean isArchived = false;
 
+    /** Key in the shared file store ({tenant}/library/{folderId}/{uuid}.{ext}); null for reference rows without a file */
+    @Column(name = "storage_key", length = 500)
+    private String storageKey;
+
+    @Column(name = "checksum_sha256", length = 64)
+    private String checksumSha256;
+
     /** False for reference rows seeded without a file; the UI then renders a placeholder */
     @Column(name = "has_content")
     @Builder.Default

@@ -1,6 +1,5 @@
 package com.kvs.communication.service;
 
-import com.kvs.core.tenancy.TenantContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kvs.communication.entity.BroadcastDeliveryLog;
 import com.kvs.communication.entity.CommunicationBroadcast;
@@ -8,17 +7,17 @@ import com.kvs.communication.enums.ChannelType;
 import com.kvs.communication.enums.DeliveryStatus;
 import com.kvs.communication.repo.BroadcastDeliveryLogRepository;
 import com.kvs.core.exception.BadRequestException;
-import jakarta.annotation.PreDestroy;
+import com.kvs.core.exception.ForbiddenException;
+import com.kvs.core.messaging.JobContext;
+import com.kvs.core.messaging.JobFailedException;
+import com.kvs.core.messaging.JobHandler;
+import com.kvs.core.messaging.JobQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.client.RestClientResponseException;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Delivers circulars and emergency alerts (US-09000, US-09010, US-09011) through the school's own providers
@@ -28,13 +27,21 @@ import java.util.concurrent.Executors;
  *       active staff (hrservice).</li>
  *   <li>One delivery log row per recipient is saved as QUEUED with the circular, or SKIPPED with the reason (no mobile number,
  *       no email, app push not available).</li>
- *   <li>After the circular is saved, the queued rows are sent in the background in batches of 100. WhatsApp that fails or is
- *       not set up is sent again by SMS (fallback_triggered).</li>
+ *   <li>With the circular, one background job ({@value #JOB_TYPE}, ms-messaging) per batch of up to 100 queued rows is saved
+ *       in the same transaction, so the sending survives a restart. The job sends its rows; WhatsApp that fails or is not
+ *       set up is sent again by SMS (fallback_triggered). When the messaging service cannot be reached the rows stay QUEUED
+ *       and the job is tried again later (messaging-queue-plan.md, Phase 1); on its last attempt they are FAILED.</li>
  * </ol>
  */
 @Service
 @Slf4j
-public class BroadcastDeliveryService {
+public class BroadcastDeliveryService implements JobHandler {
+
+    /** The background job that sends one batch of a circular's rows */
+    public static final String JOB_TYPE = "comm.delivery";
+
+    /** What the job needs: the text to send (the version chosen for these rows) and the rows */
+    public record DeliveryJob(UUID broadcastId, String title, String body, List<UUID> deliveryIds) { }
 
     /**
      * Someone to send to. label: "Parent of Aarav Sharma (Class 7)" or "Staff · Mathematics teacher". language: the language
@@ -47,15 +54,7 @@ public class BroadcastDeliveryService {
 
     @Autowired private ServiceClients clients;
     @Autowired private BroadcastDeliveryLogRepository logs;
-
-    private final ExecutorService pool = Executors.newFixedThreadPool(2, r -> {
-        Thread t = new Thread(r, "circular-delivery");
-        t.setDaemon(true);
-        return t;
-    });
-
-    @PreDestroy
-    void stop() { pool.shutdown(); }
+    @Autowired private JobQueue jobs;
 
     /* ---------------- audience ---------------- */
 
@@ -118,6 +117,15 @@ public class BroadcastDeliveryService {
      */
     public void queue(CommunicationBroadcast b, String bearer) {
         if (bearer == null) throw new BadRequestException("Sign in again to send this circular");
+        // Checked now by authservice, with the sender's token: the rows are sent later with the service's own identity,
+        // because the sender's token may have expired by then (messaging-queue-plan.md, Phase 0)
+        boolean allowed;
+        try {
+            allowed = clients.maySendCirculars(bearer, b.getTenantId());
+        } catch (Exception e) {
+            throw new BadRequestException("Could not check that you may send circulars (the sign-in service did not answer). Try again.");
+        }
+        if (!allowed) throw new ForbiddenException("You may not send circulars");
         List<Recipient> people = recipients(bearer, b.getTenantId(), b.getTargetAudience());
         ChannelType first = b.getChannel() == ChannelType.MULTI_CHANNEL ? ChannelType.WHATSAPP : b.getChannel();
         // Translated versions go out by email only: the SMS and WhatsApp templates are registered in one language
@@ -143,49 +151,63 @@ public class BroadcastDeliveryService {
             if (stored.get(k).getDeliveryStatus() != DeliveryStatus.QUEUED) continue;   // skipped rows have nothing to send
             groups.computeIfAbsent(versionOf.get(k), v -> new ArrayList<>()).add(stored.get(k).getDeliveryId());
         }
-        UUID id = b.getBroadcastId();
-        String tenant = b.getTenantId();
         CircularTranslations.Version main = new CircularTranslations.Version(b.getTitle(), b.getMessageBody());
-        // the pool thread has no request: run the delivery for the circular's school, so it reads and writes that school's schema
-        Runnable send = () -> groups.forEach((version, ids) -> {
+        // queued in this transaction: the jobs exist exactly when the circular and its rows are saved
+        groups.forEach((version, ids) -> {
             CircularTranslations.Version chosen = version.isEmpty() ? main : versions.get(version);
-            pool.submit(() -> TenantContext.runAs(tenant, () -> {
-                try { send(id, tenant, ids, chosen.title(), chosen.body(), bearer); }
-                catch (Exception e) { log.error("Delivery of circular {} stopped: {}", id, e.getMessage(), e); }
-            }));
+            for (int from = 0; from < ids.size(); from += BATCH) {
+                List<UUID> part = List.copyOf(ids.subList(from, Math.min(ids.size(), from + BATCH)));
+                jobs.enqueue(JOB_TYPE, new DeliveryJob(b.getBroadcastId(), chosen.title(), chosen.body(), part));
+            }
         });
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override public void afterCommit() { send.run(); }
-            });
-        } else {
-            send.run();
+    }
+
+    @Override
+    public String type() { return JOB_TYPE; }
+
+    /** Run by the job worker with the circular's school set. Safe to repeat: only rows still QUEUED are sent. */
+    @Override
+    public void run(JobContext job) {
+        DeliveryJob d = job.payload(DeliveryJob.class);
+        boolean lastAttempt = job.attempt() >= maxAttempts();
+        int waiting = send(d.broadcastId(), job.tenantId(), d.deliveryIds(), d.title(), d.body(), lastAttempt);
+        if (waiting > 0) {
+            throw new JobFailedException("The messaging service could not be reached; " + waiting + " message(s) wait to be sent", true);
         }
     }
 
-    /** Sends the circular's queued rows; WhatsApp that fails or is not set up goes again by SMS. */
-    void send(UUID broadcastId, String tenantId, Collection<UUID> deliveryIds, String title, String body, String bearer) {
+    /**
+     * Sends the circular's queued rows; WhatsApp that fails or is not set up goes again by SMS. Returns how many rows were
+     * left QUEUED because the messaging service could not be reached (always 0 on the last attempt: those are FAILED).
+     */
+    int send(UUID broadcastId, String tenantId, Collection<UUID> deliveryIds, String title, String body, boolean lastAttempt) {
         List<BroadcastDeliveryLog> queued = logs.findAllById(deliveryIds).stream()
                 .filter(l -> l.getDeliveryStatus() == DeliveryStatus.QUEUED).toList();
         Map<ChannelType, List<BroadcastDeliveryLog>> byChannel = new EnumMap<>(ChannelType.class);
         queued.forEach(l -> byChannel.computeIfAbsent(l.getChannel(), k -> new ArrayList<>()).add(l));
+        int waiting = 0;
         for (Map.Entry<ChannelType, List<BroadcastDeliveryLog>> e : byChannel.entrySet()) {
-            deliver(e.getKey(), e.getValue(), broadcastId, tenantId, title, body, bearer);
+            waiting += deliver(e.getKey(), e.getValue(), broadcastId, tenantId, title, body, lastAttempt);
         }
         // fallback: WhatsApp not accepted → SMS
         List<BroadcastDeliveryLog> again = new ArrayList<>();
         for (BroadcastDeliveryLog l : byChannel.getOrDefault(ChannelType.WHATSAPP, List.of())) {
-            if (l.getDeliveryStatus() == DeliveryStatus.SENT || NO_NUMBER.equals(l.getErrorMessage())) continue;
+            if (l.getDeliveryStatus() == DeliveryStatus.SENT || l.getDeliveryStatus() == DeliveryStatus.QUEUED
+                    || NO_NUMBER.equals(l.getErrorMessage())) continue;   // QUEUED: not tried yet (service unreachable)
             l.setFallbackTriggered(true);
             l.setChannel(ChannelType.SMS);
             l.setErrorMessage("WhatsApp: " + l.getErrorMessage());
             again.add(l);
         }
-        if (!again.isEmpty()) deliver(ChannelType.SMS, again, broadcastId, tenantId, title, body, bearer);
-        log.info("Circular {}: {} queued, {} sent again by SMS", broadcastId, queued.size(), again.size());
+        if (!again.isEmpty()) waiting += deliver(ChannelType.SMS, again, broadcastId, tenantId, title, body, lastAttempt);
+        log.info("Circular {}: {} queued, {} sent again by SMS, {} waiting", broadcastId, queued.size(), again.size(), waiting);
+        return waiting;
     }
 
-    private void deliver(ChannelType channel, List<BroadcastDeliveryLog> rows, UUID broadcastId, String tenantId, String title, String body, String bearer) {
+    /** Returns how many rows it left QUEUED (messaging service unreachable, not the last attempt) */
+    private int deliver(ChannelType channel, List<BroadcastDeliveryLog> rows, UUID broadcastId, String tenantId, String title, String body,
+                        boolean lastAttempt) {
+        int waiting = 0;
         for (int from = 0; from < rows.size(); from += BATCH) {
             List<BroadcastDeliveryLog> batch = rows.subList(from, Math.min(rows.size(), from + BATCH));
             List<Map<String, Object>> messages = new ArrayList<>();
@@ -200,13 +222,20 @@ public class BroadcastDeliveryService {
             }
             Map<String, JsonNode> results = new HashMap<>();
             String batchError = null;
+            boolean unreachable = false;
             try {
-                JsonNode reply = clients.deliver(bearer, tenantId, Map.of("channel", channel.name(), "reference", "circular " + broadcastId, "messages", messages));
+                JsonNode reply = clients.deliver(tenantId, Map.of("channel", channel.name(), "reference", "circular " + broadcastId, "messages", messages));
                 for (JsonNode r : reply.path("results")) results.put(r.path("ref").asText(), r);
             } catch (RestClientResponseException e) {
                 batchError = "The messaging service refused the batch (HTTP " + e.getStatusCode().value() + ")";
             } catch (Exception e) {
                 batchError = "The messaging service could not be reached";
+                unreachable = true;
+            }
+            if (unreachable && !lastAttempt) {
+                // left QUEUED (not saved): the job is tried again later and sends them then
+                waiting += batch.size();
+                continue;
             }
             for (BroadcastDeliveryLog l : batch) {
                 JsonNode r = results.get(l.getDeliveryId().toString());
@@ -226,6 +255,7 @@ public class BroadcastDeliveryService {
             List<BroadcastDeliveryLog> stored = logs.saveAll(batch);
             for (int k = 0; k < stored.size(); k++) batch.set(k, stored.get(k));
         }
+        return waiting;
     }
 
     private static void skip(BroadcastDeliveryLog row, String why) {

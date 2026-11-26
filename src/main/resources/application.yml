@@ -67,13 +67,27 @@ communication:
     opens-at: ${SUPPORT_OPENS_AT:08:00}
     closes-at: ${SUPPORT_CLOSES_AT:17:00}
     response-time: ${SUPPORT_RESPONSE_TIME:Usually within 2 hours}
-  # circular delivery: called with the sender's own token (ServiceClients)
+  # circular delivery (ServiceClients): contacts and the may-send check with the sender's token; the sends with kvs.internal.key
   services:
     auth-url: ${AUTH_SERVICE_URL:http://localhost:8082/authservice}
     student-url: ${STUDENT_SERVICE_URL:http://localhost:8084/studentservice}
     hr-url: ${HR_SERVICE_URL:http://localhost:8088/hrservice}
 
 kvs:
+  # Shared file store (ms-core FileUploads): school document library files (area library, PDF/Office/images, 20 MB).
+  # Development: one folder for all services (../file-vault); type=s3 needs the KVS_STORAGE_* settings (see hrservice).
+  storage:
+    type: ${KVS_STORAGE_TYPE:local}
+    local:
+      base-path: ${KVS_STORAGE_PATH:../file-vault}
+    s3:
+      bucket: ${KVS_STORAGE_BUCKET:}
+      region: ${KVS_STORAGE_REGION:ap-south-1}
+      prefix: ${KVS_STORAGE_PREFIX:}
+      endpoint: ${KVS_STORAGE_ENDPOINT:}
+      path-style: ${KVS_STORAGE_PATH_STYLE:false}
+      encryption: ${KVS_STORAGE_ENCRYPTION:aws:kms}
+      kms-key-id: ${KVS_STORAGE_KMS_KEY_ID:}
   # Schema-per-school routing (database/tenant-split, school_webapp/docs/tenant-schema-split-plan.md).
   # Leave off until the database has been split; when on, Hibernate ddl-auto is forced to none.
   tenancy:

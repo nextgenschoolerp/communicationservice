@@ -31,3 +31,12 @@ logging:
   level:
     root: warn
     com.kvs: info
+
+kvs:
+  storage:
+    local:
+      base-path: ${java.io.tmpdir}/communication-vault-test
+  jobs:
+    worker:
+      # no job table in H2: tests run queued jobs themselves (CommunicationTestSupport)
+      enabled: false
